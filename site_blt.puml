@@ -1,0 +1,59 @@
+@startuml
+!include https://raw.githubusercontent.com/bschwarz/puml-themes/master/themes/cerulean/puml-theme-cerulean.puml
+'https://plantuml.com/ru/sitemap-language-specification
+
+skinparam defaultFontSize 16
+
+
+package "Location MS"
+note top
+ Сервис по работе с локалью пользователя, отвечает за определение
+ местоположения, работу с картами
+ (пока сомневаюсь нужен ли будет, возможно все надо будет делать в UI MS)
+end note
+
+package "Sale MS"
+note top
+ Сервис по работе со скидками с спец-предложениями
+end note
+
+package "Catalog MS"
+note top
+ Сервис отвечающий за формирование каталога товаров
+end note
+
+package "Payment MS"
+note top
+ Сервис отвечающий за online оплату
+end note
+
+package "Order MS"
+note top
+ Сервис оформления заказа
+end note
+
+package "UI MS" {
+  agent USER
+  [UI MS] --> [Location MS] : "Определяем\n местоположение u"
+  [Location MS] --> [UI MS] : "Возвращаем координаты"
+  [UI MS] --> [Sale MS] : "Отправляем координаты u"
+  [Sale MS] --> [UI MS] : "Возвращаем скидки и\n спец предложения"
+  [UI MS] --> [Catalog MS] : "Запрашиваем катало товаров"
+  [Catalog MS] --> [UI MS] : "Возвращаем товары, магазины\n и координаты"
+  [USER] --> "Пользователь выбирает товар"
+  "Пользователь выбирает товар" --> [Location MS] : "Отображаем магазины на карте"
+  [Location MS] --> "Показываем карту с магазинами"
+  "Показываем карту с магазинами" --> "Выбираем способ доставки"
+  "Выбираем способ доставки" --> "Выбираем способ оплаты"
+  "Выбираем способ оплаты" --> "Оформляем заказ"
+  "Оформляем заказ" --> "Online payment"
+  "Online payment" --> [Payment MS] : "Оплачиваем заказ"
+  "Payment MS" --> [Оформляем заказ] : "Успешно или нет"
+  [Оформляем заказ] --> [Order MS]
+}
+note top
+ Сервис отвечающий за фронт проекта
+ Вся координация между сервисами осуществляется по REST
+end note
+
+@enduml
