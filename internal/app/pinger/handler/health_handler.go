@@ -16,6 +16,7 @@ type Hello struct {
 // HelloResponse ответ ручки
 type HelloResponse struct {
 	Status string `json:"status"`
+	App    string `json:"app"`
 }
 
 // NewHelloHandler создает хендлер создания превью.
@@ -30,7 +31,7 @@ func NewHelloHandler(
 func (rh *Hello) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	err := json.NewEncoder(w).Encode(HelloResponse{Status: "OK"})
+	err := json.NewEncoder(w).Encode(HelloResponse{Status: "OK", App: rh.config.App.Name})
 	if err != nil {
 		server.GetLogger(r.Context()).Error("ошибка ответа hello handler", "err", err)
 

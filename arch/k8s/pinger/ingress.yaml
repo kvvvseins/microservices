@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: pinger-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /health/$2
+    nginx.ingress.kubernetes.io/rewrite-target: /
   namespace: microservices
 spec:
   ingressClassName: nginx
@@ -11,7 +11,7 @@ spec:
   - host: arch.homework
     http:
       paths:
-        - path: /otusapp/(.*)($|/)(.*)
+        - path: /
           pathType: ImplementationSpecific
           backend:
             service:

@@ -19,4 +19,6 @@ FROM amd64/alpine:3.9
 
 COPY --from=build /opt/pinger/pinger-app /opt/pinger/pinger-app
 
-CMD APP_NAME=pinger /opt/pinger/pinger-app
+ENV APP_NAME=pinger
+
+CMD ["/opt/pinger/pinger-app"]
