@@ -8,7 +8,7 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 
-COPY .. /go/src/
+COPY ../../../build /go/src/
 
 # Собираем статический бинарник Go (без зависимостей на Си API),
 # иначе он не будет работать в alpine образе.

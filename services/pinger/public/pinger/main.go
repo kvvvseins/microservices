@@ -8,16 +8,16 @@ import (
 	"strings"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/kvvvseins/mictoservices/config"
-	"github.com/kvvvseins/mictoservices/internal/app/pinger/handler"
-	"github.com/kvvvseins/mictoservices/server"
+	"github.com/kvvvseins/mictoservices/service/pinger/config/pinger"
+	"github.com/kvvvseins/mictoservices/service/pinger/internal/app/pinger/handler"
+	"github.com/kvvvseins/mictoservices/services/server"
 )
 
 func main() {
-	cnf := config.Config{}
+	cnf := pinger.Config{}
 	prefixCfg := ""
 
-	err := config.LoadConfig(&cnf, prefixCfg)
+	err := pinger.LoadConfig(&cnf, prefixCfg)
 	if err != nil {
 		slog.Error(err.Error())
 

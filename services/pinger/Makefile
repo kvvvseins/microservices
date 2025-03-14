@@ -2,13 +2,15 @@ ROOT_PATH := ./../..
 K8S_PATH := $(ROOT_PATH)/arch/k8s
 HELM_PATH := $(ROOT_PATH)/arch/helm
 
-PINGER_DOCKER := $(ROOT_PATH)/build/pinger/Dockerfile
+PINGER_DOCKER := ./build/Dockerfile
 PINGER_K8S_PATH := $(K8S_PATH)/pinger
+
+MIGRATION_PATH := $(ROOT_PATH)/migration/pinger
 
 ###### DOCKER ######
 build-docker:
 	#Build сервиса pinger
-	docker build -t vladimirkostin/pinger:latest -f $(PINGER_DOCKER) $(ROOT_PATH);
+	docker build -t vladimirkostin/pinger:latest -f $(PINGER_DOCKER) .;
 
 push-docker:
 	#Залить изменения сервиса pinger в репозиторий
@@ -44,5 +46,3 @@ setDefaultNamespace:
 health:
 	curl arch.homework/health/
 
-create:
-	migrate create -ext sql -dir db/migrations -seq create_users_table

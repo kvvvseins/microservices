@@ -4,18 +4,18 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/kvvvseins/mictoservices/config"
-	"github.com/kvvvseins/mictoservices/server"
+	"github.com/kvvvseins/mictoservices/service/pinger/config/pinger"
+	"github.com/kvvvseins/mictoservices/services/server"
 )
 
 // CrudPinger хендлер создания превью.
 type CrudPinger struct {
-	config *config.Config
+	config *pinger.Config
 }
 
 // CrudPingerHandler создает хендлер crud для pinger.
 func CrudPingerHandler(
-	cfg *config.Config,
+	cfg *pinger.Config,
 ) http.Handler {
 	return &Hello{
 		config: cfg,

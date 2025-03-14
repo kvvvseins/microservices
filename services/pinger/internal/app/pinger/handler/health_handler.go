@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/kvvvseins/mictoservices/config"
-	"github.com/kvvvseins/mictoservices/server"
+	"github.com/kvvvseins/mictoservices/service/pinger/config/pinger"
+	"github.com/kvvvseins/mictoservices/services/server"
 )
 
 // Hello хендлер создания превью.
 type Hello struct {
-	config *config.Config
+	config *pinger.Config
 }
 
 // HelloResponse ответ ручки
@@ -21,7 +21,7 @@ type HelloResponse struct {
 
 // NewHelloHandler создает хендлер создания превью.
 func NewHelloHandler(
-	cfg *config.Config,
+	cfg *pinger.Config,
 ) http.Handler {
 	return &Hello{
 		config: cfg,

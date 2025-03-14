@@ -1,4 +1,4 @@
-module github.com/kvvvseins/mictoservices
+module github.com/kvvvseins/mictoservices/service/pinger
 
 go 1.23.4
 
