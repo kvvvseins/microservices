@@ -43,3 +43,6 @@ setDefaultNamespace:
 	kubectl config set-context --current --namespace=microservices
 health:
 	curl arch.homework/health/
+
+create:
+	migrate create -ext sql -dir db/migrations -seq create_users_table
