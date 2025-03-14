@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-pinger-statefulset
+  namespace: microservices
+spec:
+  serviceName: postgres-pinger
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-pinger
+  template:
+    metadata:
+      labels:
+        app: postgres-pinger
+    spec:
+      containers:
+      - name: postgres-pinger
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+          name: postgredb
+        env:
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: pinger-config
+                key: POSTGRES_DB
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: pinger-secret
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pinger-secret
+                key: POSTGRES_PASSWORD
+        volumeMounts:
+        - name: postgredb-pinger
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres-pinger
+  volumeClaimTemplates:
+  - metadata:
+      name: postgredb-pinger
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 300Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-pinger
+  labels:
+    app: postgres-pinger
+  namespace: microservices
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-pinger

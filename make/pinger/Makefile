@@ -19,6 +19,8 @@ push-docker:
 apply:
 	#Применить манифесты для сервиса pinger
 	kubectl apply -f $(K8S_PATH)/namespace.yaml;
+	kubectl apply -f $(PINGER_K8S_PATH)/config/app-config.yaml;
+	kubectl apply -f $(PINGER_K8S_PATH)/postgres.yaml;
 	kubectl apply -f $(PINGER_K8S_PATH)/deployment.yaml;
 	kubectl apply -f $(PINGER_K8S_PATH)/service.yaml;
 	kubectl apply -f $(PINGER_K8S_PATH)/ingress.yaml;
@@ -33,7 +35,11 @@ delete:
 	kubectl delete -f $(PINGER_K8S_PATH)/ingress.yaml;
 	kubectl delete -f $(PINGER_K8S_PATH)/service.yaml;
 	kubectl delete -f $(PINGER_K8S_PATH)/deployment.yaml;
+	kubectl delete -f $(PINGER_K8S_PATH)/postgres.yaml;
+	kubectl delete -f $(PINGER_K8S_PATH)/config/app-config.yaml;
 ###### K8S ######
 
+setDefaultNamespace:
+	kubectl config set-context --current --namespace=microservices
 health:
 	curl arch.homework/health/
