@@ -5,21 +5,21 @@ HELM_PATH := $(ROOT_PATH)/arch/helm
 PINGER_DOCKER := ./build/Dockerfile
 PINGER_K8S_PATH := $(K8S_PATH)/pinger
 
-MIGRATION_PATH := $(ROOT_PATH)/migration/pinger
+MIGRATION_PATH := ./migration
 
 ###### DOCKER ######
 build-docker:
-	#Build сервиса pinger
+	#Build сервиса
 	docker build -t vladimirkostin/pinger:latest -f $(PINGER_DOCKER) .;
 
 push-docker:
-	#Залить изменения сервиса pinger в репозиторий
+	#Залить изменения сервиса в репозиторий
 	docker push vladimirkostin/pinger;
 ###### DOCKER ######
 
 ###### K8S ######
 apply:
-	#Применить манифесты для сервиса pinger
+	#Применить манифесты для сервиса
 	kubectl apply -f $(K8S_PATH)/namespace.yaml;
 	kubectl apply -f $(PINGER_K8S_PATH)/config/app-config.yaml;
 	kubectl apply -f $(PINGER_K8S_PATH)/postgres.yaml;
@@ -28,12 +28,12 @@ apply:
 	kubectl apply -f $(PINGER_K8S_PATH)/ingress.yaml;
 
 redeploy:
-	#Удалить манифесты для сервиса pinger
+	#Удалить манифесты для сервиса
 	kubectl delete -f $(PINGER_K8S_PATH)/deployment.yaml;
 	kubectl apply -f $(PINGER_K8S_PATH)/deployment.yaml;
 
 delete:
-	#Удалить манифесты для сервиса pinger
+	#Удалить манифесты для сервиса
 	kubectl delete -f $(PINGER_K8S_PATH)/ingress.yaml;
 	kubectl delete -f $(PINGER_K8S_PATH)/service.yaml;
 	kubectl delete -f $(PINGER_K8S_PATH)/deployment.yaml;
@@ -45,4 +45,7 @@ setDefaultNamespace:
 	kubectl config set-context --current --namespace=microservices
 health:
 	curl arch.homework/health/
+
+create_migration:
+	$(ROOT_PATH)/bin/migrate create -ext sql -dir $(MIGRATION_PATH) -seq create_users_table
 

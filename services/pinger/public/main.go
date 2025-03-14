@@ -8,9 +8,9 @@ import (
 	"strings"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/kvvvseins/mictoservices/service/pinger/config/pinger"
-	"github.com/kvvvseins/mictoservices/service/pinger/internal/app/pinger/handler"
-	"github.com/kvvvseins/mictoservices/services/server"
+	"github.com/kvvvseins/mictoservices/services/pinger/config/pinger"
+	"github.com/kvvvseins/mictoservices/services/pinger/internal/app/handler"
+	"github.com/kvvvseins/mictoservices/services/pinger/server"
 )
 
 func main() {

@@ -8,11 +8,11 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 
-COPY ../../../build /go/src/
+COPY . /go/src/
 
 # Собираем статический бинарник Go (без зависимостей на Си API),
 # иначе он не будет работать в alpine образе.
-RUN CGO_ENABLED=0 go build -o /opt/pinger/pinger-app ./public/pinger/...
+RUN CGO_ENABLED=0 go build -o /opt/pinger/pinger-app ./public/...
 
 # На выходе тонкий образ
 FROM amd64/alpine:3.9

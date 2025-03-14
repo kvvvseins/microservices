@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/kvvvseins/mictoservices/service/pinger/config/pinger"
-	"github.com/kvvvseins/mictoservices/services/server"
+	"github.com/kvvvseins/mictoservices/services/pinger/config/pinger"
+	"github.com/kvvvseins/mictoservices/services/pinger/server"
 )
 
 // Hello хендлер создания превью.

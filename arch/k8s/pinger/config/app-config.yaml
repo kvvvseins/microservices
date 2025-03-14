@@ -4,7 +4,7 @@ metadata:
   name: pinger-config
   namespace: microservices
 data:
-  DB_TYPE: "psx"
+  DB_TYPE: "postgres"
   POSTGRES_DB: "pinger"
 ---
 apiVersion: v1
