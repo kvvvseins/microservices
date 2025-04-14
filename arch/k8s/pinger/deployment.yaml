@@ -18,6 +18,7 @@ spec:
           containers:
           - name: pinger
             image: vladimirkostin/pinger:latest
+            command: ["/opt/pinger/pinger-app"]
             env:
               - name: PORT
                 value: '8000'

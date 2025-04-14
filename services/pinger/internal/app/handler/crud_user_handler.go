@@ -8,22 +8,39 @@ import (
 	"github.com/kvvvseins/mictoservices/services/pinger/server"
 )
 
-// CrudPinger хендлер создания превью.
-type CrudPinger struct {
+// CrudUser хендлер создания превью.
+type CrudUser struct {
 	config *pinger.Config
 }
 
-// CrudPingerHandler создает хендлер crud для pinger.
-func CrudPingerHandler(
+// CrudUserHandler создает хендлер crud для pinger.
+func CrudUserHandler(
 	cfg *pinger.Config,
 ) http.Handler {
-	return &Hello{
+	return &CrudUser{
 		config: cfg,
 	}
 }
 
-func (rh *CrudPinger) get(w http.ResponseWriter, r *http.Request) {
+func (rh *CrudUser) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	switch r.Method {
+	case http.MethodGet:
+		rh.get(w, r)
+	case http.MethodPost:
+		rh.create(w, r)
+	case http.MethodPut:
+		rh.update(w, r)
+	case http.MethodDelete:
+		rh.delete(w, r)
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	}
+}
+
+func (rh *CrudUser) get(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 
 	err := json.NewEncoder(w).Encode(HelloResponse{Status: "OK", App: rh.config.App.Name})
 	if err != nil {
@@ -33,8 +50,7 @@ func (rh *CrudPinger) get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (rh *CrudPinger) create(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func (rh *CrudUser) create(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 
 	err := json.NewEncoder(w).Encode(HelloResponse{Status: "OK", App: rh.config.App.Name})
@@ -45,8 +61,8 @@ func (rh *CrudPinger) create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (rh *CrudPinger) update(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func (rh *CrudUser) update(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 
 	err := json.NewEncoder(w).Encode(HelloResponse{Status: "OK", App: rh.config.App.Name})
 	if err != nil {
@@ -56,7 +72,6 @@ func (rh *CrudPinger) update(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (rh *CrudPinger) deleye(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+func (rh *CrudUser) delete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(204)
 }

@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pinger-migrate-up
+  namespace: microservices
+spec:
+  ttlSecondsAfterFinished: 60
+  template:
+    spec:
+      containers:
+        - name: pinger-migrate-up
+          image: vladimirkostin/pinger:latest
+          args:
+            - "/bin/sh"
+            - "-c"
+            - "/opt/db/migrate -database=${CONNECTION_DSN} -path=/opt/db/migrations up"
+          env:
+            - name: CONNECTION_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: pinger-secret
+                  key: CONNECTION_DSN
+      restartPolicy: Never
+  backoffLimit: 4

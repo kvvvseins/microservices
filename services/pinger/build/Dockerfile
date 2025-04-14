@@ -14,11 +14,19 @@ COPY . /go/src/
 # иначе он не будет работать в alpine образе.
 RUN CGO_ENABLED=0 go build -o /opt/pinger/pinger-app ./public/...
 
+# Собираем migrator
+RUN git clone https://github.com/golang-migrate/migrate
+
+WORKDIR /go/src/migrate/
+
+RUN git checkout v4.18.2
+RUN CGO_ENABLED=0 go build -o /go/src/db -ldflags='-X main.Version=4.18' -tags 'github postgres' ./cmd/migrate
+
 # На выходе тонкий образ
 FROM amd64/alpine:3.9
 
 COPY --from=build /opt/pinger/pinger-app /opt/pinger/pinger-app
+COPY --from=build /go/src/db /opt/db
 
 ENV APP_NAME=pinger
 
-CMD ["/opt/pinger/pinger-app"]

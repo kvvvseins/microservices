@@ -25,7 +25,7 @@ func main() {
 	}
 
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelWarn,
+		Level: cnf.App.LogLevel,
 	}))
 
 	slog.SetDefault(logger)
@@ -37,6 +37,15 @@ func main() {
 		"/health/",
 		handler.NewHelloHandler(&cnf),
 	)
+
+	router.Handle(
+		"/user/{id}/",
+		handler.CrudUserHandler(&cnf),
+	)
+
+	router.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "favicon.ico")
+	})
 
 	if err = chi.Walk(router, walkRouters); err != nil {
 		slog.Debug("Logging err", "error", err.Error())
