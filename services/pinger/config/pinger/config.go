@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 import _ "github.com/lib/pq"
@@ -31,6 +32,10 @@ type Config struct {
 		TYPE          string   `envconfig:"DB_TYPE" required:"true"`
 		ConnectionDsn string   `envconfig:"CONNECTION_DSN" required:"true"`
 	}
+}
+
+func (c *Config) GetDb() *gorm.DB {
+	return c.DB.Connection
 }
 
 // LoadConfig функция для загрузки конфигурации.
@@ -66,7 +71,9 @@ func dbConnection(cfg *Config) {
 
 	switch cfg.DB.TYPE {
 	case "postgres":
-		cfg.DB.Connection, err = gorm.Open(postgres.Open(cfg.DB.ConnectionDsn), &gorm.Config{})
+		cfg.DB.Connection, err = gorm.Open(postgres.Open(cfg.DB.ConnectionDsn), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Info),
+		})
 	default:
 		log.Fatalf("connect type not supported: %s", cfg.DB.TYPE)
 	}
