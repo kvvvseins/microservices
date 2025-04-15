@@ -18,6 +18,9 @@ push-docker:
 ###### DOCKER ######
 
 ###### K8S ######
+get-deployment:
+	#Удалить манифесты для сервиса
+	kubectl get -f $(PINGER_K8S_PATH)/deployment.yaml;
 redeploy:
 	#Удалить манифесты для сервиса
 	kubectl delete -f $(PINGER_K8S_PATH)/deployment.yaml;
