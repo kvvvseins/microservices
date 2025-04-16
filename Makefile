@@ -1,4 +1,4 @@
-ROOT_PATH := ./
+ROOT_PATH := .
 K8S_PATH := $(ROOT_PATH)/arch/k8s
 HELM_PATH := $(ROOT_PATH)/arch/helm
 

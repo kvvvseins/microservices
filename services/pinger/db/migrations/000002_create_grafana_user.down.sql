@@ -1,0 +1,3 @@
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM grafanareader;
+REVOKE CONNECT ON DATABASE pinger FROM grafanareader;
+DROP USER grafanareader;

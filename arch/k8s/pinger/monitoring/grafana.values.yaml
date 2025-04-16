@@ -1,0 +1,32 @@
+service:
+  type: NodePort
+  nodePorts:
+    grafana: 30011
+
+persistence:
+  enabled: false
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
+dashboardsProvider:
+  enabled: true
+
+datasources:
+  secretName: datasources-pinger
+
+dashboardsConfigMaps:
+  - configMapName: dashboard-kube
+    folderName: kube
+    filename: dashboard-kube.json
+  - configMapName: dashboard-postgresql
+    folderName: postgresql
+    filename: dashboard-postgresql.json
+  - configMapName: dashboard-ingress-nginx
+    folderName: ingressnginx
+    filename: dashboard-ingress-nginx.json
+  - configMapName: dashboard-request-handler-performance
+    folderName: requesthandlerperformance
+    filename: dashboard-request-handler-performance.json
