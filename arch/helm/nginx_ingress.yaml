@@ -8,3 +8,9 @@ controller:
       https: 443
   service:
     type: NodePort
+  metrics:
+    enabled: true
+    serviceMonitor:
+      additionalLabels:
+        release: prometheus
+      enabled: true

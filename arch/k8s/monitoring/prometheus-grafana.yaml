@@ -1,0 +1,17 @@
+grafana:
+  additionalDataSources:
+    - name: grafana-postgresql-datasource
+      type: postgres
+      url: postgres-pinger
+      user: root
+      secureJsonData:
+        password: 'passwd'
+      jsonData:
+        database: pinger
+        sslmode: 'disable' # disable/require/verify-ca/verify-full
+        maxOpenConns: 100
+        maxIdleConns: 100
+        maxIdleConnsAuto: true
+        connMaxLifetime: 14400
+        postgresVersion: 1704 # 903=9.3, 904=9.4, 905=9.5, 906=9.6, 1000=10
+        timescaledb: false
