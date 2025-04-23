@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/kvvvseins/mictoservices/services/pinger/config/pinger"
 	"github.com/kvvvseins/mictoservices/services/pinger/server"
@@ -29,6 +30,9 @@ func NewHelloHandler(
 }
 
 func (rh *Hello) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	randomI := randRange(20, 1500)
+	time.Sleep(time.Duration(randomI) * time.Millisecond)
+
 	w.Header().Set("Content-Type", "application/json")
 
 	err := json.NewEncoder(w).Encode(HelloResponse{Status: "OK", App: rh.config.App.Name})

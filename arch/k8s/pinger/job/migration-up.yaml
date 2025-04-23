@@ -20,5 +20,5 @@ spec:
                 secretKeyRef:
                   name: pinger-secret
                   key: CONNECTION_DSN
-      restartPolicy: Never
-  backoffLimit: 4
+      restartPolicy: OnFailure
+  backoffLimit: 7

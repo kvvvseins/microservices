@@ -3,8 +3,10 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"math/rand/v2"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/kvvvseins/mictoservices/services/pinger/config/pinger"
@@ -52,6 +54,9 @@ func (cu *CrudUser) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (cu *CrudUser) get(w http.ResponseWriter, r *http.Request) {
+	randomI := randRange(20, 1000)
+	time.Sleep(time.Duration(randomI) * time.Millisecond)
+
 	user, err := cu.getUserByRequest(r)
 	if err != nil {
 		cu.textErrorResponse(r.Context(), w, err, "не удалось получить пользователя")
@@ -194,4 +199,8 @@ func (cu *CrudUser) responseUser(user *model.User, w http.ResponseWriter, r *htt
 
 		return
 	}
+}
+
+func randRange(min, max int) int {
+	return rand.IntN(max-min) + min
 }

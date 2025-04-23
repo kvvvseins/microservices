@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitoring
+  namespace: microservices
+  labels:
+    release: prometheus
+    k8s-apps: http
+spec:
+  jobLabel: k8s-app
+  selector:
+    matchExpressions:
+      - { key: k8s-app, operator: Exists }
+  endpoints:
+    - port: http-metrics
+      interval: 15s
+

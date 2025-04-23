@@ -35,3 +35,5 @@ spec:
             ports:
               - name: web
                 containerPort: 8000
+              - name: metrics
+                containerPort: 9090
