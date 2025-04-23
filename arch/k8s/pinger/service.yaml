@@ -12,9 +12,9 @@ spec:
     - protocol: TCP
       port: 8000
       name: pinger-web
-      targetPort: web
+      targetPort: pinger-web-dep
     - protocol: TCP
       port: 9090
       name: http-metrics
       targetPort: metrics
-  type: NodePort
+  type: ClusterIP

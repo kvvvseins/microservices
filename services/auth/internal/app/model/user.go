@@ -12,8 +12,9 @@ import (
 type User struct {
 	ID        uint      `gorm:"primary_key;AUTO_INCREMENT;->"`
 	Guid      uuid.UUID `gorm:"type:uuid;<-:create"`
-	Password  string    `gorm:"<-:create"`
+	Password  string
 	Email     string
+	IsActive  bool
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

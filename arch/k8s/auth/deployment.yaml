@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+  labels:
+    app: auth
+  namespace: microservices
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth-service
+          image: vladimirkostin/auth:latest
+          command: ["/opt/auth/auth-app"]
+          ports:
+            - name: auth-w-deploy
+              containerPort: 8000
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: jwt-secret
+            - name: CONNECTION_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: connection_dsn
+            - name: JWT_AUDIENCE
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: jwt-audience
+            - name: JWT_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: jwt-issuer
+            - name: DB_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: auth-config
+                  key: db_type

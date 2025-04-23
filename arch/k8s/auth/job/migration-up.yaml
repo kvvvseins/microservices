@@ -1,15 +1,15 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: pinger-migrate-up
+  name: auth-migrate-up
   namespace: microservices
 spec:
   ttlSecondsAfterFinished: 60
   template:
     spec:
       containers:
-        - name: pinger-migrate-up
-          image: vladimirkostin/pinger:latest
+        - name: auth-migrate-up
+          image: vladimirkostin/auth:latest
           args:
             - "/bin/sh"
             - "-c"
@@ -18,7 +18,7 @@ spec:
             - name: CONNECTION_DSN
               valueFrom:
                 secretKeyRef:
-                  name: pinger-secret
+                  name: auth-secret
                   key: connection_dsn
       restartPolicy: OnFailure
   backoffLimit: 7

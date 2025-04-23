@@ -8,6 +8,8 @@ controller:
       https: 443
   service:
     type: NodePort
+  config:
+    proxy-buffer-size: 16k
   metrics:
     enabled: true
     serviceMonitor:

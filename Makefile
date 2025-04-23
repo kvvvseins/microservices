@@ -13,12 +13,20 @@ login-docker:
 ###### DOCKER ######
 
 ###### INSTALL CLUSTER ######
-install: pre-install install-monitoring
+install: add-namespace setDefaultNamespace install-monitoring install-nginx
+# далее поднимаем сервисы, надо только дождаться пока ingress-nginx поднимется
+check-ingress-nginx-pod:
+	kubectl get pods --namespace ingress-nginx
 ###### INSTALL CLUSTER ######
 
 ###### K8S ######
-pre-install: install-nginx-ingress-repo install-nginx-ingress
+setDefaultNamespace:
+	kubectl config set-context --current --namespace=$(MICROSERVICES_NAMESPACE)
 
+install-nginx: install-nginx-ingress-repo install-nginx-ingress
+
+add-namespace:
+	kubectl apply -f $(K8S_PATH)/namespace.yaml;
 install-nginx-ingress-repo:
 	#Добавляем репу
 	-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/
@@ -29,14 +37,14 @@ install-nginx-ingress:
 ###### K8S ######
 
 ### MONITORING SERVICE ###
-install-monitoring: add-helm-repo install-config install-helms-monitoring delete-default-dashboard
+install-monitoring: add-helm-repo install-config install-helms-monitoring delete-default-dashboard add-metric-ingress
 
 add-helm-repo:
 	#для настроек мониторинга постгри, надо разобраться в настройке prometheus-postgres-exporter
 	-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	-helm repo update
 
-uninstall-monitoring: uninstall-helms-monitoring delete-config
+uninstall-monitoring: uninstall-helms-monitoring delete-config delete-metric-ingress
 
 upgrade-monitoring: upgrade-monitoring-helm delete-default-dashboard
 
@@ -52,6 +60,11 @@ get-urls:
 	echo "Prometheus URL all metrics: http://prometheus.arch.homework/api/v1/label/__name__/values"
 	echo "Grafana URL: http://grafana.arch.homework"
 
+add-metric-ingress:
+	kubectl apply -f $(K8S_PATH)/metrics-ingress.yaml
+delete-metric-ingress:
+	kubectl delete -f $(K8S_PATH)/metrics-ingress.yaml
+
 delete-config:
 	kubectl delete -f $(K8S_MONITORING_DASHBOARD_PATH)/dashboard-kube.yaml
 	kubectl delete -f $(K8S_MONITORING_DASHBOARD_PATH)/dashboard-ingress-nginx.yaml
@@ -63,7 +76,7 @@ install-config:
 uninstall-helms-monitoring:
 	-helm --namespace $(MICROSERVICES_NAMESPACE) uninstall prometheus
 install-helms-monitoring:
-	-helm install --namespace $(MICROSERVICES_NAMESPACE) prometheus prometheus-community/kube-prometheus-stack -f ./arch/k8s/monitoring/prometheus-grafana.yaml -f ./arch/k8s/monitoring/kube-prometheus.yaml
+	-helm install --namespace $(MICROSERVICES_NAMESPACE) prometheus prometheus-community/kube-prometheus-stack --version v71.2.0 -f ./arch/k8s/monitoring/prometheus-grafana.yaml -f ./arch/k8s/monitoring/kube-prometheus.yaml
 delete-default-dashboard:
 	-kubectl delete configmap prometheus-kube-prometheus-k8s-coredns
 	-kubectl delete configmap prometheus-kube-prometheus-etcd

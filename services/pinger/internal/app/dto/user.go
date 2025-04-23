@@ -1,14 +1,13 @@
 package dto
 
-type ViewUser struct {
-	Email string `json:"email"`
+type ViewProfile struct {
+	Name string `json:"name"`
 }
 
-type CreateUser struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+type CreateProfile struct {
+	Name string `json:"name"`
 }
 
-type UpdateUser struct {
-	Email string `json:"email"`
+type UpdateProfiel struct {
+	Name string `json:"name"`
 }

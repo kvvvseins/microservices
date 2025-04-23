@@ -14,7 +14,6 @@ require (
 	github.com/prometheus/client_golang v1.22.0
 	github.com/rs/zerolog v1.34.0
 	github.com/slok/go-http-metrics v0.13.0
-	golang.org/x/crypto v0.37.0
 	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
 )
@@ -35,6 +34,7 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.62.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
+	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/sync v0.13.0 // indirect
 	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/text v0.24.0 // indirect

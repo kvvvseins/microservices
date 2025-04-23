@@ -1,0 +1,28 @@
+@startuml
+!include https://raw.githubusercontent.com/bschwarz/puml-themes/master/themes/cerulean/puml-theme-cerulean.puml
+'https://plantuml.com/ru/sitemap-language-specification
+
+skinparam defaultFontSize 16
+agent USER
+
+node "Kubernetes cluster" {
+    package "Not Auth MS" {
+        [Auth MS]
+        [USER] -> [Auth MS]
+        [Auth MS] -> [USER] : Логируется и получает JWT
+    }
+
+    package "Auth depended on MS" {
+        [Personal Cabinet (Pinger) MS]
+    }
+
+    package "Api Gateway" {
+        [Nginx Ingress Controller]
+        [USER] --> [Nginx Ingress Controller] : Запрос в защищенный блок
+        [Nginx Ingress Controller] -> [Auth MS] : Верификация JWT
+        [Auth MS] -> [Nginx Ingress Controller]
+        [Nginx Ingress Controller] --> [Auth depended on MS] : Успешная авторизация
+    }
+}
+
+@enduml

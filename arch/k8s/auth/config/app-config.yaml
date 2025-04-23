@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-config
+  namespace: microservices
+data:
+  jwt-issuer: "microservices-services"
+  jwt-audience: "arch.homework"
+  db_type: "postgres"
+  postgres_db: "auth"

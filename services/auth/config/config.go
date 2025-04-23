@@ -1,4 +1,4 @@
-package pinger
+package config
 
 import (
 	"context"
@@ -22,6 +22,18 @@ type Config struct {
 	App struct {
 		Name     string     `envconfig:"NAME" required:"true"`
 		LogLevel slog.Level `default:"warn" envconfig:"LOG_LEVEL"`
+		Jwt      struct {
+			Secret   string `envconfig:"JWT_SECRET"`
+			Issuer   string `envconfig:"JWT_ISSUER"`
+			Audience string `envconfig:"JWT_AUDIENCE"`
+		}
+		MicroservicesRoutes struct {
+			Pinger struct {
+				Schema string `envconfig:"MICROSERVICES_PINGER_SCHEMA" default:"http"`
+				Route  string `envconfig:"MICROSERVICES_PINGER_ROUTE" default:"pinger-service"`
+				Port   string `envconfig:"MICROSERVICES_PINGER_PORT" default:"8000"`
+			}
+		}
 	}
 	Env  string `default:"dev" envconfig:"ENV"`
 	HTTP struct {
