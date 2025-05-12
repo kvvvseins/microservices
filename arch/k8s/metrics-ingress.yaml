@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: metrics-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  namespace: microservices
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+        - path: /pc/metrics(|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: pinger-service
+              port:
+                number: 9090
+  - host: grafana.arch.homework
+    http:
+      paths:
+        - path: /(|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: prometheus-grafana
+              port:
+                number: 80
+  - host: prometheus.arch.homework
+    http:
+      paths:
+        - path: /(|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: prometheus-kube-prometheus-prometheus
+              port:
+                number: 9090

@@ -4,8 +4,8 @@ metadata:
   name: pinger-config
   namespace: microservices
 data:
-  DB_TYPE: "postgres"
-  POSTGRES_DB: "pinger"
+  db_type: "postgres"
+  postgres_db: "pinger"
 ---
 apiVersion: v1
 kind: Secret
@@ -14,6 +14,6 @@ metadata:
   namespace: microservices
 type: Opaque
 data:
-  POSTGRES_USER: cm9vdA==
-  POSTGRES_PASSWORD: cGFzc3dk
-  CONNECTION_DSN: cG9zdGdyZXM6Ly9yb290OnBhc3N3ZEBwb3N0Z3Jlcy1waW5nZXI6NTQzMi9waW5nZXI/c3NsbW9kZT1kaXNhYmxl
+  postgres_user: cm9vdA==
+  postgres_password: cGFzc3dk
+  connection_dsn: cG9zdGdyZXM6Ly9yb290OnBhc3N3ZEBwb3N0Z3Jlcy1waW5nZXI6NTQzMi9waW5nZXI/c3NsbW9kZT1kaXNhYmxl

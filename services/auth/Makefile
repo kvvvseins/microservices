@@ -1,10 +1,10 @@
-################### PINGER(PERSONAL CABINET) SERVICE ####################
+################### AUTH SERVICE ####################
 
 ROOT_PATH := ./../..
 K8S_PATH := $(ROOT_PATH)/arch/k8s
 
 SERVICE_DOCKER := ./build/Dockerfile
-SERVICE_NAME := pinger
+SERVICE_NAME := auth
 SERVICE_K8S_PATH := $(K8S_PATH)/$(SERVICE_NAME)
 
 MIGRATION_PATH := ./db/migrations
@@ -34,6 +34,14 @@ install: apply
 migration: migration-up
 ###### INSTALL SERVICE PINGER ######
 
+###### AUTH JWT OIDC-Guard (На данный момент не использую, сделал в своем МС верификацию) #######
+install_jwt:
+	helm repo add oidc-guard https://ivanjosipovic.github.io/OIDC-Guard
+	helm repo update
+	helm install oidc-guard oidc-guard/oidc-guard --namespace $(MICROSERVICES_NAMESPACE) -f $(SERVICE_K8S_PATH)/config/oidc-guard-values.yaml
+
+delete_jwt:
+	helm delete oidc-guard --namespace $(MICROSERVICES_NAMESPACE)
 ###### K8S ######
 get-ip-service:
 	#В /etc/hosts указать данный INTERNAL-IP
@@ -47,31 +55,27 @@ migration-up:
 #Применить манифесты для сервиса
 apply:
 	kubectl apply -f $(SERVICE_K8S_PATH)/config/app-config.yaml;
+	kubectl apply -f $(SERVICE_K8S_PATH)/config/app-secret.yaml;
 	kubectl apply -f $(SERVICE_K8S_PATH)/postgres.yaml;
 	kubectl apply -f $(SERVICE_K8S_PATH)/deployment.yaml;
 	kubectl apply -f $(SERVICE_K8S_PATH)/service.yaml;
-	kubectl apply -f $(K8S_PATH)/servicemonitor.yaml;
-	kubectl apply -f $(K8S_PATH)/ingress.yaml;
-	kubectl apply -f $(SERVICE_K8S_PATH)/monitoring/pinger-app.yaml
+	kubectl apply -f $(K8S_PATH)/auth-ingress.yaml;
 
 #Удалить манифесты для сервиса
 delete:
-	kubectl delete -f $(K8S_PATH)/ingress.yaml;
-	kubectl delete -f $(K8S_PATH)/servicemonitor.yaml;
+	kubectl delete -f $(K8S_PATH)/auth-ingress.yaml;
 	kubectl delete -f $(SERVICE_K8S_PATH)/service.yaml;
 	kubectl delete -f $(SERVICE_K8S_PATH)/deployment.yaml;
 	kubectl delete -f $(SERVICE_K8S_PATH)/postgres.yaml;
 	kubectl delete -f $(SERVICE_K8S_PATH)/config/app-config.yaml;
-	kubectl delete -f $(SERVICE_K8S_PATH)/monitoring/pinger-app.yaml
+	kubectl delete -f $(SERVICE_K8S_PATH)/config/app-secret.yaml;
 ###### K8S ######
 
 health:
-	curl arch.homework/pc/health/
+	curl auth.arch.homework/auth/health/
 
 create_migration:
-	./$(ROOT_PATH)/bin/migrate create -ext sql -dir $(MIGRATION_PATH) -seq create_grafana_user
+	./$(ROOT_PATH)/bin/migrate create -ext sql -dir $(MIGRATION_PATH) -seq add_is_active_column
 down_migration:
 	$(eval DB_URL_FOR_MIGRATION := $(shell minikube service postgres-$(SERVICE_NAME) -n $(MICROSERVICES_NAMESPACE) --url | sed 's/http:\/\///'))
 	./$(ROOT_PATH)/bin/migrate -database "postgres://root:passwd@$(DB_URL_FOR_MIGRATION)/$(SERVICE_NAME)?sslmode=disable" -path $(MIGRATION_PATH) down 1
-
-

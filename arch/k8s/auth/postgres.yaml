@@ -2,48 +2,48 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres-pinger-statefulset
+  name: postgres-auth-statefulset
   namespace: microservices
 spec:
-  serviceName: postgres-pinger
+  serviceName: postgres-auth
   replicas: 1
   selector:
     matchLabels:
-      app: postgres-pinger
+      app: postgres-auth
   template:
     metadata:
       labels:
-        app: postgres-pinger
+        app: postgres-auth
     spec:
       containers:
-      - name: postgres-pinger
+      - name: postgres-auth
         image: postgres:17.4
         ports:
         - containerPort: 5432
-          name: pgsql-pinger
+          name: pgsql-auth
         env:
           - name: POSTGRES_DB
             valueFrom:
               configMapKeyRef:
-                name: pinger-config
+                name: auth-config
                 key: postgres_db
           - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
-                name: pinger-secret
+                name: auth-secret
                 key: postgres_user
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: pinger-secret
+                name: auth-secret
                 key: postgres_password
         volumeMounts:
-        - name: postgredb-pinger
+        - name: postgredb-auth
           mountPath: /var/lib/postgresql/data
-          subPath: postgres-pinger
+          subPath: postgres-auth
   volumeClaimTemplates:
   - metadata:
-      name: postgredb-pinger
+      name: postgredb-auth
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: standard
@@ -55,13 +55,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres-pinger
+  name: postgres-auth
   labels:
-    app: postgres-pinger
+    app: postgres-auth
   namespace: microservices
 spec:
   type: NodePort # только для тренировки, а так надо ClusterIP
   ports:
     - port: 5432
   selector:
-    app: postgres-pinger
+    app: postgres-auth

@@ -6,7 +6,7 @@ metadata:
       app: pinger
     namespace: microservices
 spec:
-    replicas: 2
+    replicas: 3
     selector:
        matchLabels:
           app: pinger
@@ -26,14 +26,14 @@ spec:
                 valueFrom:
                   configMapKeyRef:
                     name: pinger-config
-                    key: DB_TYPE
+                    key: db_type
               - name: CONNECTION_DSN
                 valueFrom:
                   secretKeyRef:
                     name: pinger-secret
-                    key: CONNECTION_DSN
+                    key: connection_dsn
             ports:
-              - name: web
+              - name: pinger-web-dep
                 containerPort: 8000
               - name: metrics
                 containerPort: 9090
