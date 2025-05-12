@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/kvvvseins/mictoservices/services/pinger/config"
-	"github.com/kvvvseins/mictoservices/services/pinger/server"
+	"github.com/kvvvseins/server"
 )
 
 // Hello хендлер создания превью.

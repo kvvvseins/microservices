@@ -12,7 +12,7 @@ import (
 	"github.com/kvvvseins/mictoservices/services/auth/config"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/handler"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/repository"
-	"github.com/kvvvseins/mictoservices/services/auth/server"
+	"github.com/kvvvseins/server"
 )
 
 func main() {

@@ -11,7 +11,7 @@ import (
 	"github.com/kvvvseins/mictoservices/services/pinger/config"
 	"github.com/kvvvseins/mictoservices/services/pinger/internal/app/handler"
 	"github.com/kvvvseins/mictoservices/services/pinger/internal/app/repository"
-	"github.com/kvvvseins/mictoservices/services/pinger/server"
+	"github.com/kvvvseins/server"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	metrics "github.com/slok/go-http-metrics/metrics/prometheus"
 	"github.com/slok/go-http-metrics/middleware"
@@ -58,9 +58,9 @@ func main() {
 	handler.RegisterProfileHandlers(router, profileHandler)
 
 	go func() {
-		err = http.ListenAndServe(":9090", promhttp.Handler())
+		err = http.ListenAndServe(":9070", promhttp.Handler())
 		if err != nil {
-			slog.Error("pinger metric closed", slog.Int("port", 9090))
+			slog.Error("pinger metric closed", slog.Int("port", 9070))
 		}
 	}()
 

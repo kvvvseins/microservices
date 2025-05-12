@@ -18,7 +18,7 @@ spec:
             service:
               name: pinger-service
               port:
-                number: 9090
+                number: 9070
   - host: grafana.arch.homework
     http:
       paths:
@@ -38,4 +38,4 @@ spec:
             service:
               name: prometheus-kube-prometheus-prometheus
               port:
-                number: 9090
+                number: 9070

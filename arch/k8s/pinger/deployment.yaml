@@ -36,4 +36,4 @@ spec:
               - name: pinger-web-dep
                 containerPort: 8000
               - name: metrics
-                containerPort: 9090
+                containerPort: 9070

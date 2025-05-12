@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/kvvvseins/mictoservices/services/auth/config"
-	"github.com/kvvvseins/mictoservices/services/auth/server"
+	"github.com/kvvvseins/server"
 )
 
 // Hello хендлер создания превью.

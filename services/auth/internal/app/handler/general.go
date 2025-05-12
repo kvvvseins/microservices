@@ -10,7 +10,7 @@ import (
 	"github.com/kvvvseins/mictoservices/services/auth/config"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/dto"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/model"
-	"github.com/kvvvseins/mictoservices/services/auth/server"
+	"github.com/kvvvseins/server"
 )
 
 const userGuidHeader = "X-User-Id"
