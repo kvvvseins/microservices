@@ -31,7 +31,11 @@ redeploy:
 
 ###### INSTALL SERVICE PINGER ######
 install: apply
+check-status:
+	kubectl get pods --namespace $(MICROSERVICES_NAMESPACE) | grep $(SERVICE_NAME)
 migration: migration-up
+check-ingress:
+	kubectl get ingress --namespace $(MICROSERVICES_NAMESPACE) | grep $(SERVICE_NAME)
 ###### INSTALL SERVICE PINGER ######
 
 ###### AUTH JWT OIDC-Guard (На данный момент не использую, сделал в своем МС верификацию) #######
@@ -72,7 +76,7 @@ delete:
 ###### K8S ######
 
 health:
-	curl auth.arch.homework/auth/health/
+	curl arch.homework/auth/health/ -v
 
 create_migration:
 	./$(ROOT_PATH)/bin/migrate create -ext sql -dir $(MIGRATION_PATH) -seq add_is_active_column

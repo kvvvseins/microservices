@@ -31,7 +31,11 @@ redeploy:
 
 ###### INSTALL SERVICE PINGER ######
 install: apply
+check-status:
+	kubectl get pods --namespace $(MICROSERVICES_NAMESPACE) | grep $(SERVICE_NAME)
 migration: migration-up
+check-ingress:
+	kubectl get ingress --namespace $(MICROSERVICES_NAMESPACE) | grep $(SERVICE_NAME)
 ###### INSTALL SERVICE PINGER ######
 
 ###### K8S ######

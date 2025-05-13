@@ -19,6 +19,36 @@ check-ingress-nginx-pod:
 	kubectl get pods --namespace ingress-nginx
 ###### INSTALL CLUSTER ######
 
+###### INSTALL KAFKA (не настроена, только варианты) ######
+
+###### RED PANDA ########
+instal-cert:
+	kubectl taint node -l node-role.kubernetes.io/control-plane="" node-role.kubernetes.io/control-plane=:NoSchedule
+	helm repo add redpanda https://charts.redpanda.com
+	helm repo add jetstack https://charts.jetstack.io
+	helm repo update
+	helm install cert-manager jetstack/cert-manager --set crds.enabled=true --namespace cert-manager --create-namespace
+
+install-red-panda:
+	helm repo add redpanda https://charts.redpanda.com/
+	helm repo update
+add-repo-red-panda:
+	helm install redpanda redpanda/redpanda --version 5.10.2 --namespace $(MICROSERVICES_NAMESPACE) --set external.domain=customredpandadomain.local --set statefulset.initContainers.setDataDirOwnership.enabled=true
+###### RED PANDA ######
+
+###### strimzi манифесты ######
+install-strimzi:
+	-kubectl create namespace kafka
+	kubectl apply -f $(K8S_PATH)/kafka/cluster.yaml -n kafka
+	kubectl apply -f $(K8S_PATH)/kafka/kafka.yaml
+delete-strimzi:
+	kubectl delete -f $(K8S_PATH)/kafka/kafka.yaml
+	kubectl delete -f $(K8S_PATH)/kafka/cluster.yaml -n kafka
+	kubectl delete namespaces kafka
+###### strimzi манифесты ######
+
+###### INSTALL CLUSTER ######
+
 ###### K8S ######
 setDefaultNamespace:
 	kubectl config set-context --current --namespace=$(MICROSERVICES_NAMESPACE)

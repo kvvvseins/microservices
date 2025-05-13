@@ -1,0 +1,48 @@
+@startuml
+!include https://raw.githubusercontent.com/bschwarz/puml-themes/master/themes/cerulean/puml-theme-cerulean.puml
+'https://plantuml.com/ru/sitemap-language-specification
+
+skinparam defaultFontSize 16
+agent USER
+
+node "Kubernetes cluster" {
+    package "Not Auth" {
+        [USER] --> [Front] : Логируется
+    }
+
+    package "Auth depended on MS" {
+        [Personal Cabinet (Pinger) MS]
+        [Order MS] -> [Payment MS] : списание
+        [Payment MS] -> [Order MS]
+        [Personal Cabinet (Pinger) MS] --> [Payment MS] : Получить Баланс
+    }
+
+    package "Queue" {
+        [Order MS] --> [HTTP(Kafka prefer)] : Заказ создан
+    }
+
+    package "Inside cluster MS" {
+        [HTTP(Kafka prefer)] --> [Notification MS]
+    }
+    note top
+     Сервисы не
+     требующие
+     авторизация и
+     не смотрящие
+     наружу
+    end note
+
+    package "Api Gateway" {
+        [Front] --> [Nginx Ingress Controller Auth]
+        [Nginx Ingress Controller Auth] -> [Auth depended on MS]
+        [Auth depended on MS] -> [Nginx Ingress Controller Auth]
+    }
+}
+
+node "Remote services" {
+    package "Payment" {
+        [Front] --> [acquiring] : Начисление на счет
+        [acquiring] --> [Nginx Ingress Controller Auth] : Callback
+    }
+}
+@enduml
