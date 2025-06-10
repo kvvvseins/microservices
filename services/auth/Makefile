@@ -63,11 +63,9 @@ apply:
 	kubectl apply -f $(SERVICE_K8S_PATH)/postgres.yaml;
 	kubectl apply -f $(SERVICE_K8S_PATH)/deployment.yaml;
 	kubectl apply -f $(SERVICE_K8S_PATH)/service.yaml;
-	kubectl apply -f $(K8S_PATH)/auth-ingress.yaml;
 
 #Удалить манифесты для сервиса
 delete:
-	kubectl delete -f $(K8S_PATH)/auth-ingress.yaml;
 	kubectl delete -f $(SERVICE_K8S_PATH)/service.yaml;
 	kubectl delete -f $(SERVICE_K8S_PATH)/deployment.yaml;
 	kubectl delete -f $(SERVICE_K8S_PATH)/postgres.yaml;

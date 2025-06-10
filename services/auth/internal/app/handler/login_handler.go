@@ -7,6 +7,7 @@ import (
 	"github.com/kvvvseins/mictoservices/services/auth/config"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/dto"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/repository"
+	"github.com/kvvvseins/server"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -39,6 +40,8 @@ func (cu *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
+
+	server.GetLogger(r.Context()).Info("tttt")
 
 	// todo вынести в сервис
 	user, err := cu.userRepository.FindByEmail(loginDto.Email, true)

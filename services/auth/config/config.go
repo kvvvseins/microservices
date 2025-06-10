@@ -21,7 +21,7 @@ import _ "github.com/lib/pq"
 type Config struct {
 	App struct {
 		Name     string     `envconfig:"NAME" required:"true"`
-		LogLevel slog.Level `default:"warn" envconfig:"LOG_LEVEL"`
+		LogLevel slog.Level `default:"info" envconfig:"LOG_LEVEL"`
 		Jwt      struct {
 			Secret   string `envconfig:"JWT_SECRET"`
 			Issuer   string `envconfig:"JWT_ISSUER"`

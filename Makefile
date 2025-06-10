@@ -13,7 +13,7 @@ login-docker:
 ###### DOCKER ######
 
 ###### INSTALL CLUSTER ######
-install: add-namespace setDefaultNamespace install-monitoring install-nginx
+install: add-namespace setDefaultNamespace install-monitoring install-ingress install-nginx
 # далее поднимаем сервисы, надо только дождаться пока ingress-nginx поднимется
 check-ingress-nginx-pod:
 	kubectl get pods --namespace ingress-nginx
@@ -22,7 +22,7 @@ check-ingress-nginx-pod:
 ###### INSTALL KAFKA (не настроена, только варианты) ######
 
 ###### RED PANDA ########
-instal-cert:
+install-cert:
 	kubectl taint node -l node-role.kubernetes.io/control-plane="" node-role.kubernetes.io/control-plane=:NoSchedule
 	helm repo add redpanda https://charts.redpanda.com
 	helm repo add jetstack https://charts.jetstack.io
@@ -67,14 +67,15 @@ install-nginx-ingress:
 ###### K8S ######
 
 ### MONITORING SERVICE ###
-install-monitoring: add-helm-repo install-config install-helms-monitoring delete-default-dashboard add-metric-ingress
+install-monitoring: add-helm-repo install-config install-helms-monitoring delete-default-dashboard
+install-ingress: add-ingress
 
 add-helm-repo:
 	#для настроек мониторинга постгри, надо разобраться в настройке prometheus-postgres-exporter
 	-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	-helm repo update
 
-uninstall-monitoring: uninstall-helms-monitoring delete-config delete-metric-ingress
+uninstall-monitoring: uninstall-helms-monitoring delete-config delete-ingress
 
 upgrade-monitoring: upgrade-monitoring-helm delete-default-dashboard
 
@@ -90,9 +91,15 @@ get-urls:
 	echo "Prometheus URL all metrics: http://prometheus.arch.homework/api/v1/label/__name__/values"
 	echo "Grafana URL: http://grafana.arch.homework"
 
-add-metric-ingress:
+add-ingress:
 	kubectl apply -f $(K8S_PATH)/metrics-ingress.yaml
-delete-metric-ingress:
+	kubectl apply -f $(K8S_PATH)/servicemonitor.yaml;
+	kubectl apply -f $(K8S_PATH)/ingress.yaml;
+	kubectl apply -f $(K8S_PATH)/auth-ingress.yaml;
+delete-ingress:
+	kubectl delete -f $(K8S_PATH)/auth-ingress.yaml;
+	kubectl delete -f $(K8S_PATH)/ingress.yaml;
+	kubectl delete -f $(K8S_PATH)/servicemonitor.yaml;
 	kubectl delete -f $(K8S_PATH)/metrics-ingress.yaml
 
 delete-config:

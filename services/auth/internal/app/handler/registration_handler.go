@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"strings"
 
@@ -10,6 +10,8 @@ import (
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/dto"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/model"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/repository"
+	"github.com/kvvvseins/server"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
@@ -51,7 +53,7 @@ func (cu *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	user, err = cu.createUser(loginDto)
+	user, err = cu.createUser(r.Context(), loginDto)
 	if err != nil {
 		textErrorResponse(r.Context(), w, err, "транзакция создания юзера прервана")
 
@@ -62,7 +64,7 @@ func (cu *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 }
 
 // todo вынести в сервис
-func (cu *RegistrationHandler) createUser(loginDto dto.RegistrationRequest) (*model.User, error) {
+func (cu *RegistrationHandler) createUser(ctx context.Context, loginDto dto.RegistrationRequest) (*model.User, error) {
 	user := &model.User{
 		Email:    loginDto.Email,
 		Password: loginDto.Password,
@@ -80,17 +82,19 @@ func (cu *RegistrationHandler) createUser(loginDto dto.RegistrationRequest) (*mo
 		pingerRoute := cu.config.App.MicroservicesRoutes.Pinger.Route
 		pingerPort := cu.config.App.MicroservicesRoutes.Pinger.Port
 		request, errReq := http.NewRequest("POST", pingerSchema+"://"+pingerRoute+":"+pingerPort+"/profile/", reader)
+		server.GetLogger(ctx).Info("profile route", "url", pingerSchema+"://"+pingerRoute+":"+pingerPort+"/profile/")
 		if errReq != nil {
 			return errReq
 		}
 
 		request.Header.Set(userGuidHeader, user.Guid.String())
+		server.AddRequestIDToTraceParent(request.Header, server.GetRequestID(ctx))
 
 		var response *http.Response
 
 		response, errReq = cu.httpClient.Do(request)
 		if errReq != nil {
-			return errReq
+			return errors.Wrap(errReq, "не удалось сделать запрос на создание профиля пользователя")
 		}
 
 		if response.StatusCode != http.StatusCreated {

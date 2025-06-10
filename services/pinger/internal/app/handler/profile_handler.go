@@ -12,6 +12,7 @@ import (
 	"github.com/kvvvseins/mictoservices/services/pinger/internal/app/dto"
 	"github.com/kvvvseins/mictoservices/services/pinger/internal/app/model"
 	"github.com/kvvvseins/mictoservices/services/pinger/internal/app/repository"
+	"github.com/kvvvseins/server"
 )
 
 // ProfileHandler хендлер создания превью.
@@ -74,7 +75,7 @@ func (cu *ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (cu *ProfileHandler) get(w http.ResponseWriter, r *http.Request, guid uuid.UUID) {
 	profile, err := cu.repository.FindByGuid(guid)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "не удалось получить пользователя")
+		textErrorResponse(r.Context(), w, err, "не удалось получить профиль пользователя")
 
 		return
 	}
@@ -86,7 +87,7 @@ func (cu *ProfileHandler) create(w http.ResponseWriter, r *http.Request, guid uu
 	var userDto dto.CreateProfile
 	err := json.NewDecoder(r.Body).Decode(&userDto)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "не верные json нового юзера")
+		textErrorResponse(r.Context(), w, err, "не верные json нового профиля пользователя")
 
 		return
 	}
@@ -98,10 +99,12 @@ func (cu *ProfileHandler) create(w http.ResponseWriter, r *http.Request, guid uu
 
 	result := cu.config.GetDb().FirstOrCreate(profile, "guid = ?", guid.String())
 	if result.Error != nil {
-		textErrorResponse(r.Context(), w, result.Error, "ошибка создания юзера")
+		textErrorResponse(r.Context(), w, result.Error, "ошибка создания профиля пользователя")
 
 		return
 	}
+
+	server.GetLogger(r.Context()).Info("tttt")
 
 	cu.responseProfile(profile, w, r, http.StatusCreated)
 }
@@ -145,7 +148,7 @@ func (cu *ProfileHandler) update(w http.ResponseWriter, r *http.Request, guid uu
 
 	result := cu.config.GetDb().Model(profile).Updates(&userDto)
 	if result.Error != nil {
-		textErrorResponse(r.Context(), w, result.Error, "не удалось обновить пользователя")
+		textErrorResponse(r.Context(), w, result.Error, "не удалось обновить профиль пользователя")
 
 		return
 	}
@@ -176,7 +179,7 @@ func (cu *ProfileHandler) responseProfile(profile *model.Profile, w http.Respons
 
 	err := json.NewEncoder(w).Encode(dto.ViewProfile{Name: profile.Name})
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "ошибка обновления профиля")
+		textErrorResponse(r.Context(), w, err, "ошибка обновления профиля пользователя")
 
 		return
 	}

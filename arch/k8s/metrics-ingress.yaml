@@ -38,4 +38,4 @@ spec:
             service:
               name: prometheus-kube-prometheus-prometheus
               port:
-                number: 9070
+                number: 9090

@@ -62,6 +62,4 @@ func jwtResponse(
 
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 }
