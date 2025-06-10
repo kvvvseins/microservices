@@ -88,7 +88,7 @@ func (cu *RegistrationHandler) createUser(ctx context.Context, loginDto dto.Regi
 		}
 
 		request.Header.Set(userGuidHeader, user.Guid.String())
-		server.AddRequestIDToTraceParent(request.Header, server.GetRequestID(ctx))
+		server.AddRequestIDToRequestHeader(request.Header, server.GetRequestID(ctx))
 
 		var response *http.Response
 
