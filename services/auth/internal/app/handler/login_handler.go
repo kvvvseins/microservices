@@ -36,12 +36,10 @@ func (cu *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var loginDto dto.LoginRequest
 	err := json.NewDecoder(r.Body).Decode(&loginDto)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "не верные json логирования")
+		server.ErrorResponseOutput(r.Context(), w, err, "не верные json логирования")
 
 		return
 	}
-
-	server.GetLogger(r.Context()).Info("tttt")
 
 	// todo вынести в сервис
 	user, err := cu.userRepository.FindByEmail(loginDto.Email, true)
@@ -51,13 +49,13 @@ func (cu *LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			mess = "авторизация не удалась"
 		}
 
-		textErrorResponse(r.Context(), w, err, mess)
+		server.ErrorResponseOutput(r.Context(), w, err, mess)
 
 		return
 	}
 
 	if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginDto.Password)); err != nil {
-		textErrorResponse(r.Context(), w, err, "не верный пароль")
+		server.ErrorResponseOutput(r.Context(), w, err, "не верный пароль")
 
 		return
 	}

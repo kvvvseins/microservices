@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"time"
@@ -14,25 +13,6 @@ import (
 )
 
 const userGuidHeader = "X-User-Id"
-
-// ErrorResponse структура ошибки от LoginHandler.
-type ErrorResponse struct {
-	Message string `json:"message"`
-}
-
-func textErrorResponse(
-	ctx context.Context,
-	w http.ResponseWriter,
-	err error,
-	errMsg string,
-) {
-	if err != nil {
-		server.GetLogger(ctx).Error("ошибка auth login", "err", err)
-	}
-
-	w.WriteHeader(http.StatusBadRequest)
-	_ = json.NewEncoder(w).Encode(ErrorResponse{Message: errMsg})
-}
 
 func jwtResponse(
 	w http.ResponseWriter,
@@ -58,7 +38,7 @@ func jwtResponse(
 
 	err = json.NewEncoder(w).Encode(dto.LoginResponse{Token: tokenString})
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "ошибка логирования")
+		server.ErrorResponseOutput(r.Context(), w, err, "ошибка логирования")
 
 		return
 	}

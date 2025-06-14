@@ -41,21 +41,21 @@ func (cu *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 	var loginDto dto.RegistrationRequest
 	err := json.NewDecoder(r.Body).Decode(&loginDto)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "не верные json регистрации")
+		server.ErrorResponseOutput(r.Context(), w, err, "не верные json регистрации")
 
 		return
 	}
 
 	user, err := cu.userRepository.FindByEmail(loginDto.Email, false)
 	if err == nil {
-		textErrorResponse(r.Context(), w, nil, "данный пользователь уже существует")
+		server.ErrorResponseOutput(r.Context(), w, nil, "данный пользователь уже существует")
 
 		return
 	}
 
 	user, err = cu.createUser(r.Context(), loginDto)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "транзакция создания юзера прервана")
+		server.ErrorResponseOutput(r.Context(), w, err, "транзакция создания юзера прервана")
 
 		return
 	}

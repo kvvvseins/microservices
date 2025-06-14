@@ -54,7 +54,7 @@ func RegisterProfileHandlers(router *chi.Mux, handler http.Handler) {
 func (cu *ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	guid, isOk := getGuidFromRequest(w, r)
+	guid, isOk := server.GetUserIDFromRequest(w, r)
 	if !isOk {
 		return
 	}
@@ -75,7 +75,7 @@ func (cu *ProfileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (cu *ProfileHandler) get(w http.ResponseWriter, r *http.Request, guid uuid.UUID) {
 	profile, err := cu.repository.FindByGuid(guid)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "не удалось получить профиль пользователя")
+		server.ErrorResponseOutput(r.Context(), w, err, "не удалось получить профиль пользователя")
 
 		return
 	}
@@ -87,7 +87,7 @@ func (cu *ProfileHandler) create(w http.ResponseWriter, r *http.Request, guid uu
 	var userDto dto.CreateProfile
 	err := json.NewDecoder(r.Body).Decode(&userDto)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "не верные json нового профиля пользователя")
+		server.ErrorResponseOutput(r.Context(), w, err, "не верные json нового профиля пользователя")
 
 		return
 	}
@@ -99,12 +99,10 @@ func (cu *ProfileHandler) create(w http.ResponseWriter, r *http.Request, guid uu
 
 	result := cu.config.GetDb().FirstOrCreate(profile, "guid = ?", guid.String())
 	if result.Error != nil {
-		textErrorResponse(r.Context(), w, result.Error, "ошибка создания профиля пользователя")
+		server.ErrorResponseOutput(r.Context(), w, result.Error, "ошибка создания профиля пользователя")
 
 		return
 	}
-
-	server.GetLogger(r.Context()).Info("tttt")
 
 	cu.responseProfile(profile, w, r, http.StatusCreated)
 }
@@ -121,7 +119,7 @@ func (cu *ProfileHandler) validate(userDto dto.UpdateProfiel) error {
 func (cu *ProfileHandler) update(w http.ResponseWriter, r *http.Request, guid uuid.UUID) {
 	profile, err := cu.repository.FindByGuid(guid)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "не удалось получить профиль пользователя при обновлении")
+		server.ErrorResponseOutput(r.Context(), w, err, "не удалось получить профиль пользователя при обновлении")
 
 		return
 	}
@@ -129,13 +127,13 @@ func (cu *ProfileHandler) update(w http.ResponseWriter, r *http.Request, guid uu
 	var userDto dto.UpdateProfiel
 	err = json.NewDecoder(r.Body).Decode(&userDto)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "не верные json для обновленных данных")
+		server.ErrorResponseOutput(r.Context(), w, err, "не верные json для обновленных данных")
 
 		return
 	}
 
 	if err = cu.validate(userDto); err != nil {
-		textErrorResponse(r.Context(), w, nil, err.Error())
+		server.ErrorResponseOutput(r.Context(), w, nil, err.Error())
 
 		return
 	}
@@ -148,7 +146,7 @@ func (cu *ProfileHandler) update(w http.ResponseWriter, r *http.Request, guid uu
 
 	result := cu.config.GetDb().Model(profile).Updates(&userDto)
 	if result.Error != nil {
-		textErrorResponse(r.Context(), w, result.Error, "не удалось обновить профиль пользователя")
+		server.ErrorResponseOutput(r.Context(), w, result.Error, "не удалось обновить профиль пользователя")
 
 		return
 	}
@@ -159,14 +157,14 @@ func (cu *ProfileHandler) update(w http.ResponseWriter, r *http.Request, guid uu
 func (cu *ProfileHandler) delete(w http.ResponseWriter, r *http.Request, guid uuid.UUID) {
 	profile, err := cu.repository.FindByGuid(guid)
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "не удалось получить профиль пользователя при удалении")
+		server.ErrorResponseOutput(r.Context(), w, err, "не удалось получить профиль пользователя при удалении")
 
 		return
 	}
 
 	result := cu.config.GetDb().Delete(profile)
 	if result.Error != nil {
-		textErrorResponse(r.Context(), w, result.Error, "не удалось удалить профиль пользователя")
+		server.ErrorResponseOutput(r.Context(), w, result.Error, "не удалось удалить профиль пользователя")
 
 		return
 	}
@@ -179,7 +177,7 @@ func (cu *ProfileHandler) responseProfile(profile *model.Profile, w http.Respons
 
 	err := json.NewEncoder(w).Encode(dto.ViewProfile{Name: profile.Name})
 	if err != nil {
-		textErrorResponse(r.Context(), w, err, "ошибка обновления профиля пользователя")
+		server.ErrorResponseOutput(r.Context(), w, err, "ошибка обновления профиля пользователя")
 
 		return
 	}
