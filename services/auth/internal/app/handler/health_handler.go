@@ -8,7 +8,7 @@ import (
 	"github.com/kvvvseins/server"
 )
 
-// Hello хендлер создания превью.
+// Hello хендлер создания hello.
 type Hello struct {
 	config *config.Config
 }
@@ -19,7 +19,7 @@ type HelloResponse struct {
 	App    string `json:"app"`
 }
 
-// NewHelloHandler создает хендлер создания превью.
+// NewHelloHandler создает хендлер создания hello.
 func NewHelloHandler(
 	cfg *config.Config,
 ) http.Handler {

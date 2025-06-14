@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: billing-deployment
+    labels:
+      app: billing
+    namespace: microservices
+spec:
+    replicas: 3
+    selector:
+       matchLabels:
+          app: billing
+    template:
+       metadata:
+          labels:
+             app: billing
+       spec:
+          containers:
+          - name: billing
+            image: vladimirkostin/billing:latest
+            command: ["/opt/billing/billing-app"]
+            env:
+              - name: PORT
+                value: '8000'
+              - name: DB_TYPE
+                valueFrom:
+                  configMapKeyRef:
+                    name: billing-config
+                    key: db_type
+              - name: CONNECTION_DSN
+                valueFrom:
+                  secretKeyRef:
+                    name: billing-secret
+                    key: connection_dsn
+            ports:
+              - name: billing-web-dep
+                containerPort: 8000
+              - name: metrics
+                containerPort: 9070

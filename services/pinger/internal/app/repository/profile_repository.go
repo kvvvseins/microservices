@@ -23,10 +23,10 @@ func (ur *ProfileRepository) FindByGuid(guid uuid.UUID) (*model.Profile, error) 
 
 	result = ur.db.First(&user, "guid = ?", guid.String())
 
-	return ur.responseFoundProfile(&user, result.Error)
+	return ur.responseFound(&user, result.Error)
 }
 
-func (ur *ProfileRepository) responseFoundProfile(user *model.Profile, err error) (*model.Profile, error) {
+func (ur *ProfileRepository) responseFound(user *model.Profile, err error) (*model.Profile, error) {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, gorm.ErrRecordNotFound
 	}

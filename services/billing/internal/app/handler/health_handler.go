@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/kvvvseins/mictoservices/services/pinger/config"
+	"github.com/kvvvseins/mictoservices/services/billing/config"
 	"github.com/kvvvseins/server"
 )
 

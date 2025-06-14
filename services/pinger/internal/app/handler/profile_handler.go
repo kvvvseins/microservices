@@ -15,7 +15,7 @@ import (
 	"github.com/kvvvseins/server"
 )
 
-// ProfileHandler хендлер создания превью.
+// ProfileHandler хендлер создания pinger.
 type ProfileHandler struct {
 	config     *config.Config
 	repository *repository.ProfileRepository
@@ -177,7 +177,7 @@ func (cu *ProfileHandler) responseProfile(profile *model.Profile, w http.Respons
 
 	err := json.NewEncoder(w).Encode(dto.ViewProfile{Name: profile.Name})
 	if err != nil {
-		server.ErrorResponseOutput(r.Context(), w, err, "ошибка обновления профиля пользователя")
+		server.ErrorResponseOutput(r.Context(), w, err, "ошибка профиля пользователя")
 
 		return
 	}
