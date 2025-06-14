@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: billing-service
+  namespace: microservices
+  labels:
+    k8s-app: kube-state-metrics
+spec:
+  selector:
+    app: billing
+  ports:
+    - protocol: TCP
+      port: 8000
+      name: billing-web
+      targetPort: billing-web-dep
+  type: ClusterIP

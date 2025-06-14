@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: billing-config
+  namespace: microservices
+data:
+  db_type: "postgres"
+  postgres_db: "billing"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: billing-secret
+  namespace: microservices
+type: Opaque
+data:
+  postgres_user: cm9vdA==
+  postgres_password: cGFzc3dk
+  connection_dsn: cG9zdGdyZXM6Ly9yb290OnBhc3N3ZEBwb3N0Z3Jlcy1iaWxsaW5nOjU0MzIvYmlsbGluZz9zc2xtb2RlPWRpc2FibGU=
+#echo -n 'postgres://root:passwd@postgres-billing:5432/billing?sslmode=disable' | base64

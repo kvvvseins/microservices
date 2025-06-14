@@ -21,4 +21,14 @@ spec:
               name: pinger-service
               port:
                 number: 8000
+  - host: arch.homework
+    http:
+      paths:
+        - path: /billing(/|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: billing-service
+              port:
+                number: 8000
 

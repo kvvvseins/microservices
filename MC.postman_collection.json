@@ -82,7 +82,14 @@
 					],
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "X-Request-ID",
+								"value": "{{$randomUUID}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
 							"raw": "{{auth_url}}/health/",
 							"host": [
@@ -91,6 +98,44 @@
 							"path": [
 								"health",
 								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "verify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5MDQ5MzQ2LCJpYXQiOjE3NDg5NjI5NDYsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiI1YjQxMGNiNC1kMDg2LTQxZDUtODU5ZS1jNWRmMDM4NzdlZjgifQ.d9TugoMSNL0yFmzOtAUpHRNVSnJrg_bzgH4o-gOBRv0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{auth_url}}/verify",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"verify"
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -200,7 +245,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ2Mzk1NjIxLCJpYXQiOjE3NDYzMDkyMjEsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiI5MGViYjdjZS00ZGUyLTRmODgtYjk4NC0zNzQzYjdlYzFlNjkifQ.jMheEcc56lh_WLYgwHEme5arbenjeUqR622dxTvgpC4",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5NjUzMzY4LCJpYXQiOjE3NDk1NjY5NjgsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIyNDZhMmFlNi0xMDEzLTQ1MjEtOTAwYy0wNTUxYmU0ZDE4MTUifQ.96YjbgicEEGab1royUcg03hvzY-_sNCfouOlGJ3oo58",
 								"type": "text"
 							}
 						],
@@ -289,7 +334,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ2NDM4MDY3LCJpYXQiOjE3NDYzNTE2NjcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiI5MGViYjdjZS00ZGUyLTRmODgtYjk4NC0zNzQzYjdlYzFlNjkifQ.RxW9l4B7k5fR__g8OdG5Wi6ynhpP5Od7Nol5DduVw18",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5NjUzMzY4LCJpYXQiOjE3NDk1NjY5NjgsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIyNDZhMmFlNi0xMDEzLTQ1MjEtOTAwYy0wNTUxYmU0ZDE4MTUifQ.96YjbgicEEGab1royUcg03hvzY-_sNCfouOlGJ3oo58",
 								"type": "text"
 							}
 						],
@@ -411,6 +456,178 @@
 			]
 		},
 		{
+			"name": "billing",
+			"item": [
+				{
+					"name": "health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{billing_url}}/health/",
+							"host": [
+								"{{billing_url}}"
+							],
+							"path": [
+								"health",
+								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Get data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{billing_url}}/billing/",
+							"host": [
+								"{{billing_url}}"
+							],
+							"path": [
+								"billing",
+								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{billing_url}}/billing/",
+							"host": [
+								"{{billing_url}}"
+							],
+							"path": [
+								"billing",
+								""
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Update data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"value\": -5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{billing_url}}/billing/",
+							"host": [
+								"{{billing_url}}"
+							],
+							"path": [
+								"billing",
+								""
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "local",
 			"request": {
 				"method": "GET",
@@ -434,20 +651,32 @@
 		},
 		{
 			"name": "local Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"sdds3\",\n    \"password\": \"sd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "127.0.0.1:8000/health/",
+					"raw": "127.0.0.1:44313/registration/",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8000",
+					"port": "44313",
 					"path": [
-						"health",
+						"registration",
 						""
 					]
 				}

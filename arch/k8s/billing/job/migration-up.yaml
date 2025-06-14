@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: billing-migrate-up
+  namespace: microservices
+spec:
+  ttlSecondsAfterFinished: 60
+  template:
+    spec:
+      containers:
+        - name: billing-migrate-up
+          image: vladimirkostin/billing:latest
+          args:
+            - "/bin/sh"
+            - "-c"
+            - "/opt/db/migrate -database=${CONNECTION_DSN} -path=/opt/db/migrations up"
+          env:
+            - name: CONNECTION_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: billing-secret
+                  key: connection_dsn
+      restartPolicy: OnFailure
+  backoffLimit: 7
