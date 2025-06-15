@@ -32,7 +32,7 @@ func (ur *BillingRepository) responseFound(user *model.Billing, err error) (*mod
 	}
 
 	if err != nil {
-		return nil, errors.Wrap(err, "ошибка получения профиля пользователя")
+		return nil, errors.Wrap(err, "ошибка получения счета пользователя")
 	}
 
 	return user, nil

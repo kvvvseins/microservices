@@ -7,8 +7,8 @@ import (
 )
 
 type Profile struct {
-	ID        uint       `gorm:"primary_key;AUTO_INCREMENT;->"`
-	Guid      *uuid.UUID `gorm:"type:uuid;<-:create"`
+	ID        uint      `gorm:"primary_key;AUTO_INCREMENT;->"`
+	Guid      uuid.UUID `gorm:"type:uuid;<-:create"`
 	Name      string
 	CreatedAt time.Time
 	UpdatedAt time.Time

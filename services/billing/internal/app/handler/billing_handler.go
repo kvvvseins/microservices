@@ -37,17 +37,17 @@ func NewBillingHandler(
 func RegisterBillingHandlers(router *chi.Mux, handler http.Handler) {
 	router.Method(
 		http.MethodGet,
-		"/billing/",
+		"/",
 		handler,
 	)
 	router.Method(
 		http.MethodPost,
-		"/billing/",
+		"/",
 		handler,
 	)
 	router.Method(
 		http.MethodPut,
-		"/billing/",
+		"/",
 		handler,
 	)
 }
@@ -86,7 +86,7 @@ func (cu *BillingHandler) get(w http.ResponseWriter, r *http.Request, userID uui
 
 func (cu *BillingHandler) create(w http.ResponseWriter, r *http.Request, userID uuid.UUID) {
 	billing := &model.Billing{
-		UserID:   &userID,
+		UserID:   userID,
 		Value:    0,
 		Currency: "rub",
 	}

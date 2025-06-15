@@ -94,7 +94,7 @@ func (cu *ProfileHandler) create(w http.ResponseWriter, r *http.Request, guid uu
 
 	profile := &model.Profile{
 		Name: userDto.Name,
-		Guid: &guid,
+		Guid: guid,
 	}
 
 	result := cu.config.GetDb().FirstOrCreate(profile, "guid = ?", guid.String())

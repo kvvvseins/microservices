@@ -7,8 +7,8 @@ import (
 )
 
 type Billing struct {
-	ID        uint       `gorm:"primary_key;AUTO_INCREMENT;->"`
-	UserID    *uuid.UUID `gorm:"type:uuid;column:user_id"`
+	ID        uint      `gorm:"primary_key;AUTO_INCREMENT;->"`
+	UserID    uuid.UUID `gorm:"type:uuid;column:user_id"`
 	Value     uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
