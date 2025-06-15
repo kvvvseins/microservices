@@ -81,13 +81,12 @@ func (cu *RegistrationHandler) createUser(ctx context.Context, loginDto dto.Regi
 		pingerSchema := cu.config.App.MicroservicesRoutes.Pinger.Schema
 		pingerRoute := cu.config.App.MicroservicesRoutes.Pinger.Route
 		pingerPort := cu.config.App.MicroservicesRoutes.Pinger.Port
-		request, errReq := http.NewRequest("POST", pingerSchema+"://"+pingerRoute+":"+pingerPort+"/profile/", reader)
-		server.GetLogger(ctx).Info("profile route", "url", pingerSchema+"://"+pingerRoute+":"+pingerPort+"/profile/")
+		request, errReq := http.NewRequest(http.MethodPost, pingerSchema+"://"+pingerRoute+":"+pingerPort+"/profile/", reader)
 		if errReq != nil {
 			return errReq
 		}
 
-		request.Header.Set(userGuidHeader, user.Guid.String())
+		server.SetUserIDToHeader(request.Header, user.Guid)
 		server.AddRequestIDToRequestHeader(request.Header, server.GetRequestID(ctx))
 
 		var response *http.Response

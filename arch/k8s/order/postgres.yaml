@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-order-statefulset
+  namespace: microservices
+spec:
+  serviceName: postgres-order
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-order
+  template:
+    metadata:
+      labels:
+        app: postgres-order
+    spec:
+      containers:
+      - name: postgres-order
+        image: postgres:17.4
+        ports:
+        - containerPort: 5432
+          name: pgsql-order
+        env:
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: order-config
+                key: postgres_db
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: order-secret
+                key: postgres_user
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: order-secret
+                key: postgres_password
+        volumeMounts:
+        - name: postgredb-order
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres-order
+  volumeClaimTemplates:
+  - metadata:
+      name: postgredb-order
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 300Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-order
+  labels:
+    app: postgres-order
+  namespace: microservices
+spec:
+  type: NodePort # только для тренировки, а так надо ClusterIP
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-order

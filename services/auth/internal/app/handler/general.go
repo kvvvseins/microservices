@@ -12,8 +12,6 @@ import (
 	"github.com/kvvvseins/server"
 )
 
-const userGuidHeader = "X-User-Id"
-
 func jwtResponse(
 	w http.ResponseWriter,
 	r *http.Request,

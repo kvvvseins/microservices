@@ -37,17 +37,17 @@ func NewBillingHandler(
 func RegisterBillingHandlers(router *chi.Mux, handler http.Handler) {
 	router.Method(
 		http.MethodGet,
-		"/billing/",
+		"/",
 		handler,
 	)
 	router.Method(
 		http.MethodPost,
-		"/billing/",
+		"/",
 		handler,
 	)
 	router.Method(
 		http.MethodPut,
-		"/billing/",
+		"/",
 		handler,
 	)
 }

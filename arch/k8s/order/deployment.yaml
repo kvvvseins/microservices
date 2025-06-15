@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: order-deployment
+    labels:
+      app: order
+    namespace: microservices
+spec:
+    replicas: 3
+    selector:
+       matchLabels:
+          app: order
+    template:
+       metadata:
+          labels:
+             app: order
+       spec:
+          containers:
+          - name: order
+            image: vladimirkostin/order:latest
+            command: ["/opt/order/order-app"]
+            env:
+              - name: PORT
+                value: '8000'
+              - name: DB_TYPE
+                valueFrom:
+                  configMapKeyRef:
+                    name: order-config
+                    key: db_type
+              - name: CONNECTION_DSN
+                valueFrom:
+                  secretKeyRef:
+                    name: order-secret
+                    key: connection_dsn
+            ports:
+              - name: order-web-dep
+                containerPort: 8000
+              - name: metrics
+                containerPort: 9070
