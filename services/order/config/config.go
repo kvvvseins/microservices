@@ -30,6 +30,11 @@ type Config struct {
 				Route  string `envconfig:"MICROSERVICES_BILLING_ROUTE" default:"billing-service"`
 				Port   string `envconfig:"MICROSERVICES_BILLING_PORT" default:"8000"`
 			}
+			Notify struct {
+				Schema string `envconfig:"MICROSERVICES_NOTIFY_SCHEMA" default:"http"`
+				Route  string `envconfig:"MICROSERVICES_NOTIFY_ROUTE" default:"notify-service"`
+				Port   string `envconfig:"MICROSERVICES_NOTIFY_PORT" default:"8000"`
+			}
 		}
 	}
 	Env  string `default:"dev" envconfig:"ENV"`

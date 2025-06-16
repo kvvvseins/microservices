@@ -479,7 +479,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTg2OTYzLCJpYXQiOjE3NTAxMDA1NjMsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.yHTi3ksi3bYwKfDMKI5UioQcI0rvewzinLByBc5eV2I",
 								"type": "text"
 							}
 						],
@@ -518,7 +518,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTc1NTM1LCJpYXQiOjE3NTAwODkxMzUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.GGAoAvlvSMocin63wp4aKbsb__m1g9JCx6CxCdXdTCA",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTkxNjE3LCJpYXQiOjE3NTAxMDUyMTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.r1id8K3xsaLz1yyGIi51QJmBOWVqgnMNryAH_1ks5vc",
 								"type": "text"
 							}
 						],
@@ -557,7 +557,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTkxNjE3LCJpYXQiOjE3NTAxMDUyMTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.r1id8K3xsaLz1yyGIi51QJmBOWVqgnMNryAH_1ks5vc",
 								"type": "text"
 							}
 						],
@@ -596,13 +596,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTc1NTM1LCJpYXQiOjE3NTAwODkxMzUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.GGAoAvlvSMocin63wp4aKbsb__m1g9JCx6CxCdXdTCA",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTkxNjE3LCJpYXQiOjE3NTAxMDUyMTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.r1id8K3xsaLz1yyGIi51QJmBOWVqgnMNryAH_1ks5vc",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"value\": 5\n}",
+							"raw": "{\n\t\"value\": 55,\n    \"email\": \"ccc@mail.ru\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -687,7 +687,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTg0NzY5LCJpYXQiOjE3NTAwOTgzNjksImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.keW7rbTQ-UudOMb7cHNFsH66BnjdFc4BQt_xrXR8I4A",
 								"type": "text"
 							}
 						],
@@ -732,7 +732,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        {\n            \"guid\": \"dsd\",\n            \"price\": 1\n        },\n        {\n            \"guid\": \"dsd\",\n            \"price\": 2\n        }\n    ]\n}",
+							"raw": "{\n    \"email\": \"aaaa@mail.ru\",\n    \"products\": [\n        {\n            \"guid\": \"dsd\",\n            \"price\": 1\n        },\n        {\n            \"guid\": \"dsd\",\n            \"price\": 2\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -862,7 +862,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        {\n            \"guid\": \"dsd\",\n            \"price\": 5\n        }\n    ]\n}",
+							"raw": "{\n    \"email\": \"test@sdsd.ru\",\n    \"type\": \"change_billing\",\n    \"data\": {\n        \"price\": -5\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"

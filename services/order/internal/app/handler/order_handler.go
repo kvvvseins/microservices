@@ -83,7 +83,10 @@ func (cu *OrderHandler) get(w http.ResponseWriter, r *http.Request, userID uuid.
 
 	ordersDto := make([]dto.ViewOrder, 0, len(orders))
 	for _, order := range orders {
-		ordersDto = append(ordersDto, dto.ViewOrder{Number: order.Guid.String()})
+		ordersDto = append(ordersDto, dto.ViewOrder{
+			Number: order.Guid.String(),
+			Price:  order.Price,
+		})
 	}
 
 	err = json.NewEncoder(w).Encode(ordersDto)
@@ -122,6 +125,7 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 
 	order := &model.Order{
 		UserID: userID,
+		Price:  uint(price),
 	}
 
 	result := cu.config.GetDb().Create(order)
@@ -131,13 +135,18 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 		return
 	}
 
+	go cu.notifyCreateOrder(r.Context(), order, orderDto.Email, userID)
+
 	cu.responseOrder(order, w, r, http.StatusCreated)
 }
 
 func (cu *OrderHandler) responseOrder(order *model.Order, w http.ResponseWriter, r *http.Request, status int) {
 	w.WriteHeader(status)
 
-	err := json.NewEncoder(w).Encode(dto.ViewOrder{Number: order.Guid.String()})
+	err := json.NewEncoder(w).Encode(dto.ViewOrder{
+		Number: order.Guid.String(),
+		Price:  order.Price,
+	})
 	if err != nil {
 		server.ErrorResponseOutput(r.Context(), w, err, "ошибка заказа пользователя")
 
@@ -175,4 +184,46 @@ func (cu *OrderHandler) writeOffMoney(ctx context.Context, userID uuid.UUID, pri
 	}
 
 	return nil
+}
+
+func (cu *OrderHandler) notifyCreateOrder(
+	ctx context.Context,
+	order *model.Order,
+	email string,
+	userID uuid.UUID,
+) {
+	priceStr := strconv.Itoa(int(order.Price))
+	reader := strings.NewReader(`
+{
+    "email": "` + email + `",
+    "type": "create_order",
+    "data": {
+        "price": ` + priceStr + `
+    }
+}`)
+	notifySchema := cu.config.App.MicroservicesRoutes.Notify.Schema
+	notifyRoute := cu.config.App.MicroservicesRoutes.Notify.Route
+	notifyPort := cu.config.App.MicroservicesRoutes.Notify.Port
+	request, errReq := http.NewRequest(http.MethodPost, notifySchema+"://"+notifyRoute+":"+notifyPort+"/", reader)
+	if errReq != nil {
+		server.GetLogger(ctx).Warn("не удалось создать request для Notify", "msg", errReq.Error())
+
+		return
+	}
+
+	server.SetUserIDToHeader(request.Header, userID)
+	server.AddRequestIDToRequestHeader(request.Header, server.GetRequestID(ctx))
+
+	var response *http.Response
+
+	response, errReq = cu.httpClient.Do(request)
+	if errReq != nil {
+		server.GetLogger(ctx).Warn("не удалось сделать запрос на отправку уведомления", "msg", errReq.Error())
+
+		return
+	}
+
+	if response.StatusCode != http.StatusCreated {
+		server.GetLogger(ctx).Warn("не удалось отправить уведомление")
+	}
 }

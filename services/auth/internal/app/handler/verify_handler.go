@@ -5,8 +5,10 @@ import (
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/kvvvseins/mictoservices/services/auth/config"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/repository"
+	"github.com/kvvvseins/server"
 )
 
 // VerifyHandler структура хендлер проверки jwt
@@ -65,14 +67,21 @@ func (cu *VerifyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = cu.userRepository.FindByGuid(subject, true)
+	userID, err := uuid.Parse(subject)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 
 		return
 	}
 
-	w.Header().Set(userGuidHeader, subject)
+	_, err = cu.userRepository.FindByGuid(userID, true)
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+
+		return
+	}
+
+	server.SetUserIDToHeader(w.Header(), userID)
 
 	w.WriteHeader(http.StatusOK)
 }

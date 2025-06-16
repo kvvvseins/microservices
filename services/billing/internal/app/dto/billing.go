@@ -5,5 +5,6 @@ type ViewBilling struct {
 }
 
 type UpdateBilling struct {
-	Value int `json:"value"`
+	Value int    `json:"value"`
+	Email string `json:"email"`
 }

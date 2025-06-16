@@ -21,9 +21,16 @@ import _ "github.com/lib/pq"
 // Config конфигурации приложения.
 type Config struct {
 	App struct {
-		Name     string     `envconfig:"NAME" required:"true"`
-		LogLevel slog.Level `default:"info" envconfig:"LOG_LEVEL"`
-		Guid     uuid.UUID  `ignored:"true"`
+		Name                string     `envconfig:"NAME" required:"true"`
+		LogLevel            slog.Level `default:"info" envconfig:"LOG_LEVEL"`
+		Guid                uuid.UUID  `ignored:"true"`
+		MicroservicesRoutes struct {
+			Notify struct {
+				Schema string `envconfig:"MICROSERVICES_NOTIFY_SCHEMA" default:"http"`
+				Route  string `envconfig:"MICROSERVICES_NOTIFY_ROUTE" default:"notify-service"`
+				Port   string `envconfig:"MICROSERVICES_NOTIFY_PORT" default:"8000"`
+			}
+		}
 	}
 	Env  string `default:"dev" envconfig:"ENV"`
 	HTTP struct {

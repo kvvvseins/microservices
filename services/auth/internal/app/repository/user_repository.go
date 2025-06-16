@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/google/uuid"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/model"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
@@ -39,15 +40,15 @@ func (ur *UserRepository) FindByEmail(email string, onlyActive bool) (*model.Use
 }
 
 // FindByGuid найти по guid
-func (ur *UserRepository) FindByGuid(guid string, onlyActive bool) (*model.User, error) {
+func (ur *UserRepository) FindByGuid(guid uuid.UUID, onlyActive bool) (*model.User, error) {
 	var user model.User
 
 	var result *gorm.DB
 
 	if onlyActive {
-		result = ur.db.First(&user, "guid = ? AND is_active = ?", guid, true)
+		result = ur.db.First(&user, "guid = ? AND is_active = ?", guid.String(), true)
 	} else {
-		result = ur.db.First(&user, "guid = ?", guid)
+		result = ur.db.First(&user, "guid = ?", guid.String())
 	}
 
 	return ur.responseFoundUser(&user, result.Error)

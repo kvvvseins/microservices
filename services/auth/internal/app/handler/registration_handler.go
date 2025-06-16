@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/kvvvseins/mictoservices/services/auth/config"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/dto"
 	"github.com/kvvvseins/mictoservices/services/auth/internal/app/model"
@@ -40,7 +41,7 @@ func (cu *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 
 	var loginDto dto.RegistrationRequest
 	err := json.NewDecoder(r.Body).Decode(&loginDto)
-	if err != nil {
+	if err != nil || loginDto.Email == "" || loginDto.Password == "" {
 		server.ErrorResponseOutput(r.Context(), w, err, "не верные json регистрации")
 
 		return
@@ -59,6 +60,8 @@ func (cu *RegistrationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 
 		return
 	}
+
+	go cu.createBillingAccount(r.Context(), user.Guid)
 
 	jwtResponse(w, r, cu.config, user)
 }
@@ -104,4 +107,33 @@ func (cu *RegistrationHandler) createUser(ctx context.Context, loginDto dto.Regi
 	})
 
 	return user, err
+}
+
+func (cu *RegistrationHandler) createBillingAccount(ctx context.Context, userID uuid.UUID) {
+	billingSchema := cu.config.App.MicroservicesRoutes.Billing.Schema
+	billingRoute := cu.config.App.MicroservicesRoutes.Billing.Route
+	billingPort := cu.config.App.MicroservicesRoutes.Billing.Port
+	errMsgBase := "Не удалось создать платежный аккаунт"
+	request, errReq := http.NewRequest(http.MethodPost, billingSchema+"://"+billingRoute+":"+billingPort+"/", nil)
+	if errReq != nil {
+		server.GetLogger(ctx).Warn(errMsgBase, "msg", errReq.Error())
+
+		return
+	}
+
+	server.SetUserIDToHeader(request.Header, userID)
+	server.AddRequestIDToRequestHeader(request.Header, server.GetRequestID(ctx))
+
+	var response *http.Response
+
+	response, errReq = cu.httpClient.Do(request)
+	if errReq != nil {
+		server.GetLogger(ctx).Warn(errMsgBase, "msg", errReq.Error())
+
+		return
+	}
+
+	if response.StatusCode != http.StatusCreated {
+		server.GetLogger(ctx).Warn(errMsgBase, "msg", "status not created")
+	}
 }

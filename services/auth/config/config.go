@@ -33,6 +33,11 @@ type Config struct {
 				Route  string `envconfig:"MICROSERVICES_PINGER_ROUTE" default:"pinger-service"`
 				Port   string `envconfig:"MICROSERVICES_PINGER_PORT" default:"8000"`
 			}
+			Billing struct {
+				Schema string `envconfig:"MICROSERVICES_BILLING_SCHEMA" default:"http"`
+				Route  string `envconfig:"MICROSERVICES_BILLING_ROUTE" default:"billing-service"`
+				Port   string `envconfig:"MICROSERVICES_BILLING_PORT" default:"8000"`
+			}
 		}
 	}
 	Env  string `default:"dev" envconfig:"ENV"`

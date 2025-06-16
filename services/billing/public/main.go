@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/kvvvseins/mictoservices/services/billing/config"
@@ -29,6 +30,10 @@ func main() {
 		Level: cnf.App.LogLevel,
 	}))
 
+	httpClient := &http.Client{
+		Timeout: time.Second * 2,
+	}
+
 	slog.SetDefault(logger)
 
 	router, httpServer := server.NewServer(cnf.HTTP.Port, cnf.App.LogLevel)
@@ -41,7 +46,7 @@ func main() {
 		handler.NewHelloHandler(&cnf),
 	)
 
-	billingHandler := handler.NewBillingHandler(&cnf, billingRepository)
+	billingHandler := handler.NewBillingHandler(&cnf, billingRepository, httpClient)
 
 	handler.RegisterBillingHandlers(router, billingHandler)
 

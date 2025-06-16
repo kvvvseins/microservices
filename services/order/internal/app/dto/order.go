@@ -2,9 +2,11 @@ package dto
 
 type ViewOrder struct {
 	Number string `json:"number"`
+	Price  uint   `json:"price"`
 }
 
 type CreateOrder struct {
+	Email    string       `json:"email"`
 	Products []ProductDto `json:"products"`
 }
 

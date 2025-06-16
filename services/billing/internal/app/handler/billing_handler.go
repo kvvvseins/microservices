@@ -1,10 +1,13 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"math/rand/v2"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
@@ -20,16 +23,19 @@ import (
 type BillingHandler struct {
 	config     *config.Config
 	repository *repository.BillingRepository
+	httpClient *http.Client
 }
 
 // NewBillingHandler создает хендлер crud для billing.
 func NewBillingHandler(
 	cfg *config.Config,
 	repository *repository.BillingRepository,
+	httpClient *http.Client,
 ) http.Handler {
 	return &BillingHandler{
 		config:     cfg,
 		repository: repository,
+		httpClient: httpClient,
 	}
 }
 
@@ -74,7 +80,7 @@ func (cu *BillingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (cu *BillingHandler) get(w http.ResponseWriter, r *http.Request, userID uuid.UUID) {
-	billing, err := cu.repository.FindByUserID(userID)
+	billing, err := cu.getOrCreateAccount(userID)
 	if err != nil {
 		server.ErrorResponseOutput(r.Context(), w, err, "не удалось получить счет пользователя")
 
@@ -85,15 +91,9 @@ func (cu *BillingHandler) get(w http.ResponseWriter, r *http.Request, userID uui
 }
 
 func (cu *BillingHandler) create(w http.ResponseWriter, r *http.Request, userID uuid.UUID) {
-	billing := &model.Billing{
-		UserID:   userID,
-		Value:    0,
-		Currency: "rub",
-	}
-
-	result := cu.config.GetDb().FirstOrCreate(billing, "user_id = ?", userID.String())
-	if result.Error != nil {
-		server.ErrorResponseOutput(r.Context(), w, result.Error, "ошибка создания счета пользователя")
+	billing, err := cu.getOrCreateAccount(userID)
+	if err != nil {
+		server.ErrorResponseOutput(r.Context(), w, err, "ошибка создания счета пользователя")
 
 		return
 	}
@@ -102,8 +102,8 @@ func (cu *BillingHandler) create(w http.ResponseWriter, r *http.Request, userID 
 }
 
 // todo прикрутить валидатор
-func (cu *BillingHandler) validate(userDto dto.UpdateBilling) error {
-	if userDto.Value == 0 {
+func (cu *BillingHandler) validate(updateBillingDto dto.UpdateBilling) error {
+	if updateBillingDto.Value == 0 {
 		return errors.New("нельзя указывать 0")
 	}
 
@@ -111,28 +111,28 @@ func (cu *BillingHandler) validate(userDto dto.UpdateBilling) error {
 }
 
 func (cu *BillingHandler) update(w http.ResponseWriter, r *http.Request, userID uuid.UUID) {
-	billing, err := cu.repository.FindByUserID(userID)
+	billing, err := cu.getOrCreateAccount(userID)
 	if err != nil {
 		server.ErrorResponseOutput(r.Context(), w, err, "не удалось получить счет пользователя при обновлении")
 
 		return
 	}
 
-	var userDto dto.UpdateBilling
-	err = json.NewDecoder(r.Body).Decode(&userDto)
+	var updateBillingDto dto.UpdateBilling
+	err = json.NewDecoder(r.Body).Decode(&updateBillingDto)
 	if err != nil {
 		server.ErrorResponseOutput(r.Context(), w, err, "не верные json для обновленных данных")
 
 		return
 	}
 
-	if err = cu.validate(userDto); err != nil {
+	if err = cu.validate(updateBillingDto); err != nil {
 		server.ErrorResponseOutput(r.Context(), w, nil, err.Error())
 
 		return
 	}
 
-	intVal := int(billing.Value) + userDto.Value
+	intVal := int(billing.Value) + updateBillingDto.Value
 	if intVal < 0 {
 		server.ErrorResponseOutput(r.Context(), w, nil, "недостаточно средств")
 
@@ -141,12 +141,14 @@ func (cu *BillingHandler) update(w http.ResponseWriter, r *http.Request, userID 
 
 	billing.Value = uint(intVal)
 
-	result := cu.config.GetDb().Model(billing).Update("value", gorm.Expr("value + ?", userDto.Value))
+	result := cu.config.GetDb().Model(billing).Update("value", gorm.Expr("value + ?", updateBillingDto.Value))
 	if result.Error != nil {
 		server.ErrorResponseOutput(r.Context(), w, result.Error, "не удалось обновить счет пользователя")
 
 		return
 	}
+
+	go cu.notifyPay(r.Context(), updateBillingDto, userID)
 
 	cu.responseBilling(billing, w, r, http.StatusOK)
 }
@@ -182,4 +184,69 @@ func (cu *BillingHandler) responseBilling(billing *model.Billing, w http.Respons
 
 func randRange(min, max int) int {
 	return rand.IntN(max-min) + min
+}
+
+func (cu *BillingHandler) notifyPay(
+	ctx context.Context,
+	updateBillingDto dto.UpdateBilling,
+	userID uuid.UUID,
+) {
+	valueStr := strconv.Itoa(updateBillingDto.Value)
+	reader := strings.NewReader(`
+{
+    "email": "` + updateBillingDto.Email + `",
+    "type": "change_billing",
+    "data": {
+        "price": ` + valueStr + `
+    }
+}`)
+	notifySchema := cu.config.App.MicroservicesRoutes.Notify.Schema
+	notifyRoute := cu.config.App.MicroservicesRoutes.Notify.Route
+	notifyPort := cu.config.App.MicroservicesRoutes.Notify.Port
+	request, errReq := http.NewRequest(http.MethodPost, notifySchema+"://"+notifyRoute+":"+notifyPort+"/", reader)
+	if errReq != nil {
+		server.GetLogger(ctx).Warn("не удалось создать request изменения по счету")
+
+		return
+	}
+
+	server.SetUserIDToHeader(request.Header, userID)
+	server.AddRequestIDToRequestHeader(request.Header, server.GetRequestID(ctx))
+
+	var response *http.Response
+
+	response, errReq = cu.httpClient.Do(request)
+	if errReq != nil {
+		server.GetLogger(ctx).Warn("не удалось сделать запрос на отправку изменения по счету")
+
+		return
+	}
+
+	if response.StatusCode != http.StatusCreated {
+		server.GetLogger(ctx).Warn("не удалось отправить уведомление")
+	}
+}
+
+func (cu *BillingHandler) getOrCreateAccount(userID uuid.UUID) (*model.Billing, error) {
+	billing, err := cu.repository.FindByUserID(userID)
+	if err == nil {
+		return billing, nil
+	}
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		billing = &model.Billing{
+			UserID:   userID,
+			Value:    0,
+			Currency: "rub",
+		}
+
+		result := cu.config.GetDb().Create(billing)
+		if result.Error != nil {
+			return nil, result.Error
+		}
+
+		return billing, nil
+	}
+
+	return nil, err
 }

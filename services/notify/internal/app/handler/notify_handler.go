@@ -5,6 +5,7 @@ import (
 	"math/rand/v2"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
@@ -105,7 +106,7 @@ func (cu *NotifyHandler) create(w http.ResponseWriter, r *http.Request, userID u
 	switch notifyDto.Type {
 	case "create_order":
 		notify = buildCreateOrderNotify(&notifyDto, userID)
-	case "payed":
+	case "change_billing":
 		notify = buildPayOrderNotify(&notifyDto, userID)
 	}
 
@@ -115,7 +116,7 @@ func (cu *NotifyHandler) create(w http.ResponseWriter, r *http.Request, userID u
 		return
 	}
 
-	result := cu.config.GetDb().FirstOrCreate(notify, "user_id = ?", userID.String())
+	result := cu.config.GetDb().Create(notify)
 	if result.Error != nil {
 		server.ErrorResponseOutput(r.Context(), w, result.Error, "ошибка создания уведомления пользователя")
 
@@ -144,10 +145,27 @@ func buildPayOrderNotify(notifyDto *dto.CreateNotify, userID uuid.UUID) *model.N
 		return nil
 	}
 
+	var currencyStr string
+	currency, ok := notifyDto.Data["currency"]
+	if !ok {
+		currencyStr = "rub"
+	} else {
+		currencyStr = currency.(string)
+	}
+
+	var typeNotify string
+
+	if strings.Contains(priceStr, "-") {
+		typeNotify = "Списание"
+		priceStr = strings.ReplaceAll(priceStr, "-", "")
+	} else {
+		typeNotify = "Пополнение"
+	}
+
 	return &model.Notify{
 		UserID:  userID,
 		Email:   notifyDto.Email,
-		Message: "Заказ оплачен на сумму — " + priceStr,
+		Message: typeNotify + " средств на сумму " + priceStr + " " + currencyStr,
 	}
 }
 
