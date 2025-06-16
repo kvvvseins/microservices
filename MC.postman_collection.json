@@ -518,17 +518,16 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTc1NTM1LCJpYXQiOjE3NTAwODkxMzUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.GGAoAvlvSMocin63wp4aKbsb__m1g9JCx6CxCdXdTCA",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{billing_url}}/billing/",
+							"raw": "{{billing_url}}/",
 							"host": [
 								"{{billing_url}}"
 							],
 							"path": [
-								"billing",
 								""
 							]
 						},
@@ -563,12 +562,11 @@
 							}
 						],
 						"url": {
-							"raw": "{{billing_url}}/billing/",
+							"raw": "{{billing_url}}/",
 							"host": [
 								"{{billing_url}}"
 							],
 							"path": [
-								"billing",
 								""
 							]
 						},
@@ -598,13 +596,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTc1NTM1LCJpYXQiOjE3NTAwODkxMzUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.GGAoAvlvSMocin63wp4aKbsb__m1g9JCx6CxCdXdTCA",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"value\": -5\n}",
+							"raw": "{\n\t\"value\": 5\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -612,16 +610,275 @@
 							}
 						},
 						"url": {
-							"raw": "{{billing_url}}/billing/",
+							"raw": "{{billing_url}}/",
 							"host": [
 								"{{billing_url}}"
 							],
 							"path": [
-								"billing",
 								""
 							]
 						},
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{order_url}}/health/",
+							"host": [
+								"{{order_url}}"
+							],
+							"path": [
+								"health",
+								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Get data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5OTkzMTk3LCJpYXQiOjE3NDk5MDY3OTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.ysu1XiPCVcv8-xwVLvI007R9p_TEXF0e0RlCzt76TzU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{order_url}}/",
+							"host": [
+								"{{order_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTc1NTM1LCJpYXQiOjE3NTAwODkxMzUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.GGAoAvlvSMocin63wp4aKbsb__m1g9JCx6CxCdXdTCA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\n        {\n            \"guid\": \"dsd\",\n            \"price\": 1\n        },\n        {\n            \"guid\": \"dsd\",\n            \"price\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{order_url}}/",
+							"host": [
+								"{{order_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "notify",
+			"item": [
+				{
+					"name": "health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTc1NTM1LCJpYXQiOjE3NTAwODkxMzUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.GGAoAvlvSMocin63wp4aKbsb__m1g9JCx6CxCdXdTCA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{notify_url}}/health/",
+							"host": [
+								"{{notify_url}}"
+							],
+							"path": [
+								"health",
+								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Get data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTc1NTM1LCJpYXQiOjE3NTAwODkxMzUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.GGAoAvlvSMocin63wp4aKbsb__m1g9JCx6CxCdXdTCA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{notify_url}}/",
+							"host": [
+								"{{notify_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTc1NTM1LCJpYXQiOjE3NTAwODkxMzUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.GGAoAvlvSMocin63wp4aKbsb__m1g9JCx6CxCdXdTCA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\n        {\n            \"guid\": \"dsd\",\n            \"price\": 5\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{notify_url}}/",
+							"host": [
+								"{{notify_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
 					},
 					"response": []
 				}

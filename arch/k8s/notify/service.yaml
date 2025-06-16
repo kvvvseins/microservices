@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notify-service
+  namespace: microservices
+  labels:
+    k8s-app: kube-state-metrics
+spec:
+  selector:
+    app: notify
+  ports:
+    - protocol: TCP
+      port: 8000
+      name: notify-web
+      targetPort: notify-web-dep
+  type: ClusterIP

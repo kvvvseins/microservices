@@ -17,6 +17,11 @@ install: add-namespace setDefaultNamespace install-monitoring install-ingress in
 # далее поднимаем сервисы, надо только дождаться пока ingress-nginx поднимется
 check-ingress-nginx-pod:
 	kubectl get pods --namespace ingress-nginx
+
+install-services: install-auth install-pinger install-billing install-order install-notify
+check-readiness-db-services:
+	kubectl get pods --namespace $(MICROSERVICES_NAMESPACE) | grep postgres
+install-services-migration: install-auth-migration install-pinger-migration install-billing-migration install-order-migration install-notify-migration
 ###### INSTALL CLUSTER ######
 
 ###### INSTALL KAFKA (не настроена, только варианты) ######
@@ -141,3 +146,35 @@ delete-default-dashboard:
 	-kubectl delete configmap prometheus-kube-prometheus-node-rsrc-use
 	-kubectl delete configmap prometheus-kube-prometheus-nodes-darwin
 ### MONITORING SERVICE ###
+
+### SERVICES ###
+AUTH_SERVICE_NAME := auth
+install-auth:
+	$(MAKE) -C services/$(AUTH_SERVICE_NAME) install
+install-auth-migration:
+	$(MAKE) -C services/$(AUTH_SERVICE_NAME) migration
+
+BILLING_SERVICE_NAME := billing
+install-billing:
+	$(MAKE) -C services/$(BILLING_SERVICE_NAME) install
+install-billing-migration:
+	$(MAKE) -C services/$(BILLING_SERVICE_NAME) migration
+
+NOTIFY_SERVICE_NAME := notify
+install-notify:
+	$(MAKE) -C services/$(NOTIFY_SERVICE_NAME) install
+install-notify-migration:
+	$(MAKE) -C services/$(NOTIFY_SERVICE_NAME) migration
+
+ORDER_SERVICE_NAME := order
+install-order:
+	$(MAKE) -C services/$(ORDER_SERVICE_NAME) install
+install-order-migration:
+	$(MAKE) -C services/$(ORDER_SERVICE_NAME) migration
+
+PINGER_SERVICE_NAME := pinger
+install-pinger:
+	$(MAKE) -C services/$(PINGER_SERVICE_NAME) install
+install-pinger-migration:
+	$(MAKE) -C services/$(PINGER_SERVICE_NAME) migration
+### SERVICES ###

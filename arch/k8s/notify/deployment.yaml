@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: notify-deployment
+    labels:
+      app: notify
+    namespace: microservices
+spec:
+    replicas: 3
+    selector:
+       matchLabels:
+          app: notify
+    template:
+       metadata:
+          labels:
+             app: notify
+       spec:
+          containers:
+          - name: notify
+            image: vladimirkostin/notify:latest
+            command: ["/opt/notify/notify-app"]
+            env:
+              - name: PORT
+                value: '8000'
+              - name: DB_TYPE
+                valueFrom:
+                  configMapKeyRef:
+                    name: notify-config
+                    key: db_type
+              - name: CONNECTION_DSN
+                valueFrom:
+                  secretKeyRef:
+                    name: notify-secret
+                    key: connection_dsn
+            ports:
+              - name: notify-web-dep
+                containerPort: 8000
+              - name: metrics
+                containerPort: 9070

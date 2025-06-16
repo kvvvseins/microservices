@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-notify-statefulset
+  namespace: microservices
+spec:
+  serviceName: postgres-notify
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-notify
+  template:
+    metadata:
+      labels:
+        app: postgres-notify
+    spec:
+      containers:
+      - name: postgres-notify
+        image: postgres:17.4
+        ports:
+        - containerPort: 5432
+          name: pgsql-notify
+        env:
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: notify-config
+                key: postgres_db
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: notify-secret
+                key: postgres_user
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: notify-secret
+                key: postgres_password
+        volumeMounts:
+        - name: postgredb-notify
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres-notify
+  volumeClaimTemplates:
+  - metadata:
+      name: postgredb-notify
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 300Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-notify
+  labels:
+    app: postgres-notify
+  namespace: microservices
+spec:
+  type: NodePort # только для тренировки, а так надо ClusterIP
+  ports:
+    - port: 5432
+  selector:
+    app: postgres-notify
