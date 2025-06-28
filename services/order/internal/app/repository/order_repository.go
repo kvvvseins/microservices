@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"log"
-
 	"github.com/google/uuid"
 	"github.com/kvvvseins/mictoservices/services/order/internal/app/model"
 	"github.com/pkg/errors"
@@ -21,7 +19,7 @@ func NewOrderRepository(db *gorm.DB) *OrderRepository {
 func (ur *OrderRepository) FindByUserID(userID uuid.UUID) ([]model.Order, error) {
 	var orders []model.Order
 	if err := ur.db.Where("user_id = ?", userID.String()).Limit(10).Find(&orders).Error; err != nil {
-		log.Fatalf("error retrieving orders: %v", err)
+		return nil, err
 	}
 
 	return orders, nil

@@ -96,7 +96,7 @@ func (cu *NotifyHandler) create(w http.ResponseWriter, r *http.Request, userID u
 	var notifyDto dto.CreateNotify
 	err := json.NewDecoder(r.Body).Decode(&notifyDto)
 	if err != nil || "" == notifyDto.Email {
-		server.ErrorResponseOutput(r.Context(), w, err, "не верные json нового профиля пользователя")
+		server.ErrorResponseOutput(r.Context(), w, err, "не верные json нового уведомления")
 
 		return
 	}

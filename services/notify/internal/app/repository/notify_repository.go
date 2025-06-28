@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"log"
-
 	"github.com/google/uuid"
 	"github.com/kvvvseins/mictoservices/services/notify/internal/app/model"
 	"gorm.io/gorm"
@@ -20,7 +18,7 @@ func NewNotifyRepository(db *gorm.DB) *NotifyRepository {
 func (ur *NotifyRepository) FindByUserID(userID uuid.UUID) ([]model.Notify, error) {
 	var notifies []model.Notify
 	if err := ur.db.Where("user_id = ?", userID.String()).Limit(10).Find(&notifies).Error; err != nil {
-		log.Fatalf("error retrieving notifies: %v", err)
+		return nil, err
 	}
 
 	return notifies, nil

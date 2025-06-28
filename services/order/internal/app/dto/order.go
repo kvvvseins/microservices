@@ -11,6 +11,11 @@ type CreateOrder struct {
 }
 
 type ProductDto struct {
+	Guid     string `json:"guid"`
+	Quantity int    `json:"quantity"`
+}
+
+type Price struct {
 	Guid  string `json:"guid"`
-	Price int    `json:"price"` // Как появится сервис склада цена уберется
+	Price uint   `json:"price"`
 }

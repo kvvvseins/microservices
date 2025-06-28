@@ -7,29 +7,25 @@ import (
 	"gorm.io/gorm"
 )
 
-type Order struct {
+type Store struct {
 	ID        uint      `gorm:"primary_key;AUTO_INCREMENT;->"`
 	Guid      uuid.UUID `gorm:"type:uuid;<-:create"`
-	UserID    uuid.UUID `gorm:"type:uuid;column:user_id"`
+	Name      string
 	Price     uint
-	Status    uint
+	Quantity  int `gorm:"->"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-// BeforeCreate : hook before an order is created
-func (u *Order) BeforeCreate(_ *gorm.DB) (err error) {
+// BeforeCreate : hook before model is created
+func (u *Store) BeforeCreate(_ *gorm.DB) (err error) {
 	if u.Guid == uuid.Nil {
 		u.Guid = uuid.New()
-	}
-
-	if u.Status == 0 {
-		u.Status = 2
 	}
 
 	return
 }
 
-func (*Order) TableName() string {
-	return "orders"
+func (*Store) TableName() string {
+	return "store"
 }

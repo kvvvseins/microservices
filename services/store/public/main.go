@@ -8,14 +8,10 @@ import (
 	"strings"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/kvvvseins/mictoservices/services/pinger/config"
-	"github.com/kvvvseins/mictoservices/services/pinger/internal/app/handler"
-	"github.com/kvvvseins/mictoservices/services/pinger/internal/app/repository"
+	"github.com/kvvvseins/mictoservices/services/store/config"
+	"github.com/kvvvseins/mictoservices/services/store/internal/app/handler"
+	"github.com/kvvvseins/mictoservices/services/store/internal/app/repository"
 	"github.com/kvvvseins/server"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	metrics "github.com/slok/go-http-metrics/metrics/prometheus"
-	"github.com/slok/go-http-metrics/middleware"
-	"github.com/slok/go-http-metrics/middleware/std"
 )
 
 func main() {
@@ -35,17 +31,9 @@ func main() {
 
 	slog.SetDefault(logger)
 
-	metricMiddleware := middleware.New(middleware.Config{
-		Recorder: metrics.NewRecorder(metrics.Config{
-			DurationBuckets: []float64{.5, 1, 2.5, 5, 10, 20, 40, 80, 160, 320, 640, 1000},
-		}),
-		Service: cnf.App.Name,
-	})
 	router, httpServer := server.NewServer(cnf.HTTP.Port, cnf.App.LogLevel)
-	router.Use(std.HandlerProvider("/health/", metricMiddleware))
-	router.Use(std.HandlerProvider("/profile/", metricMiddleware))
 
-	profileRepository := repository.NewProfileRepository(cnf.GetDb())
+	storeRepository := repository.NewStoreRepository(cnf.GetDb())
 
 	router.Method(
 		http.MethodGet,
@@ -53,16 +41,17 @@ func main() {
 		handler.NewHelloHandler(&cnf),
 	)
 
-	profileHandler := handler.NewProfileHandler(&cnf, profileRepository)
+	storeHandler := handler.NewStoreHandler(&cnf, storeRepository)
+	reserveHandler := handler.NewReserveHandler(&cnf, storeRepository)
+	listHandler := handler.NewListHandler(&cnf, storeRepository)
 
-	handler.RegisterProfileHandlers(router, profileHandler)
-
-	go func() {
-		err = http.ListenAndServe(":9070", promhttp.Handler())
-		if err != nil {
-			slog.Error("pinger metric closed", slog.Int("port", 9070))
-		}
-	}()
+	handler.RegisterStoreHandlers(router, storeHandler)
+	handler.RegisterReserveHandlers(router, reserveHandler)
+	router.Method(
+		http.MethodGet,
+		"/list",
+		listHandler,
+	)
 
 	router.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "favicon.ico")

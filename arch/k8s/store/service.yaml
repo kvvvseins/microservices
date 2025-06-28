@@ -1,20 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: pinger-service
+  name: store-service
   namespace: microservices
   labels:
     k8s-app: kube-state-metrics
 spec:
   selector:
-    app: pinger
+    app: store
   ports:
     - protocol: TCP
       port: 8000
-      name: pinger-web
-      targetPort: pinger-web-dep
-    - protocol: TCP
-      port: 9070
-      name: http-metrics
-      targetPort: metrics
+      name: store-web
+      targetPort: store-web-dep
   type: ClusterIP
