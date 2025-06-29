@@ -172,7 +172,7 @@ func (cu *StoreHandler) responseStore(store *model.Store, quantity int, w http.R
 	w.WriteHeader(status)
 
 	err := json.NewEncoder(w).Encode(dto.ViewStore{
-		Guid:     store.Guid.String(),
+		Guid:     store.Guid,
 		Price:    store.Price,
 		Name:     store.Name,
 		Quantity: quantity,

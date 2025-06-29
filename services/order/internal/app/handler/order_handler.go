@@ -289,7 +289,7 @@ func (cu *OrderHandler) calculateOrderPrice(
 ) (uint, error) {
 	queryGuids := "?"
 	for _, product := range products {
-		queryGuids += "guid=" + product.Guid + "&"
+		queryGuids += "guid=" + product.Guid.String() + "&"
 	}
 
 	//@todo отдельный мс цен
@@ -340,7 +340,7 @@ func (cu *OrderHandler) calculateOrderPrice(
 	return prices, nil
 }
 
-func findQuantity(products []dto.ProductDto, guid string) (uint, error) {
+func findQuantity(products []dto.ProductDto, guid uuid.UUID) (uint, error) {
 	for _, product := range products {
 		if product.Guid == guid {
 			if product.Quantity <= 0 {

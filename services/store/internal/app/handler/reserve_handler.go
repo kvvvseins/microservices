@@ -56,13 +56,6 @@ func (cu *ReserveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orderId, err := uuid.Parse(reserveDto.OrderId)
-	if err != nil {
-		server.ErrorResponseOutput(r.Context(), w, err, "не верный гуид")
-
-		return
-	}
-
 	if len(reserveDto.Products) == 0 {
 		err = errors.New("не указаны товары для резервирования")
 		server.ErrorResponseOutput(r.Context(), w, err, err.Error())
@@ -72,15 +65,8 @@ func (cu *ReserveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	guids := make([]string, 0, len(reserveDto.Products))
 
-	for _, reserveDto := range reserveDto.Products {
-		guid, errParse := uuid.Parse(reserveDto.Guid)
-		if errParse != nil {
-			server.ErrorResponseOutput(r.Context(), w, nil, "не верные guid товара")
-
-			return
-		}
-
-		guids = append(guids, guid.String())
+	for _, reserveDtoI := range reserveDto.Products {
+		guids = append(guids, reserveDtoI.Guid.String())
 	}
 
 	//@todo тут лок нужен на товары
@@ -100,7 +86,7 @@ func (cu *ReserveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err = cu.config.GetDb().Transaction(func(tx *gorm.DB) error {
 		for _, store := range stores {
-			reserveDtoQuantity, errQ := findQuantity(reserveDto.Products, store.Guid.String())
+			reserveDtoQuantity, errQ := findQuantity(reserveDto.Products, store.Guid)
 			if errQ != nil {
 				return errQ
 			}
@@ -110,7 +96,7 @@ func (cu *ReserveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return errors.Wrap(err, "недостаточно товара на складе")
 			}
 
-			_, err = cu.repository.Reserve(reserveDtoQuantity, store.ID, &orderId, userID)
+			_, err = cu.repository.Reserve(reserveDtoQuantity, store.ID, &reserveDto.OrderId, userID)
 			if err != nil {
 				return errors.Wrap(err, "ошибка резервирования")
 			}
@@ -122,7 +108,7 @@ func (cu *ReserveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func findQuantity(reserveDtos []dto.ReserveProduct, guid string) (int, error) {
+func findQuantity(reserveDtos []dto.ReserveProduct, guid uuid.UUID) (int, error) {
 	for _, reserveDto := range reserveDtos {
 		if reserveDto.Guid == guid {
 			return reserveDto.Quantity, nil

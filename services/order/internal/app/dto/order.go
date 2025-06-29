@@ -1,5 +1,7 @@
 package dto
 
+import "github.com/google/uuid"
+
 type ViewOrder struct {
 	Number string `json:"number"`
 	Price  uint   `json:"price"`
@@ -11,11 +13,11 @@ type CreateOrder struct {
 }
 
 type ProductDto struct {
-	Guid     string `json:"guid"`
-	Quantity int    `json:"quantity"`
+	Guid     uuid.UUID `json:"guid"`
+	Quantity int       `json:"quantity"`
 }
 
 type Price struct {
-	Guid  string `json:"guid"`
-	Price uint   `json:"price"`
+	Guid  uuid.UUID `json:"guid"`
+	Price uint      `json:"price"`
 }
