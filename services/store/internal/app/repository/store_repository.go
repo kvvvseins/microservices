@@ -90,7 +90,13 @@ func (ur *StoreRepository) FindByName(name string) (*model.Store, error) {
 	return &store, nil
 }
 
-func (ur *StoreRepository) Reserve(quantity int, storeId uint, orderGuid *uuid.UUID, userId uuid.UUID) (*model.Reserve, error) {
+func (ur *StoreRepository) Reserve(
+	tx *gorm.DB,
+	quantity int,
+	storeId uint,
+	orderGuid *uuid.UUID,
+	userId uuid.UUID,
+) (*model.Reserve, error) {
 	reserve := &model.Reserve{
 		StoreId:  storeId,
 		Quantity: quantity,
@@ -98,7 +104,7 @@ func (ur *StoreRepository) Reserve(quantity int, storeId uint, orderGuid *uuid.U
 		UserID:   userId,
 	}
 
-	result := ur.db.Create(reserve)
+	result := tx.Create(reserve)
 	if result.Error != nil {
 		return nil, result.Error
 	}

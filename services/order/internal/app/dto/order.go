@@ -10,6 +10,12 @@ type ViewOrder struct {
 type CreateOrder struct {
 	Email    string       `json:"email"`
 	Products []ProductDto `json:"products"`
+	Delivery DeliveryDto  `json:"delivery"`
+}
+
+type DeliveryDto struct {
+	PlannedDateStart string `json:"planned_date_start"`
+	PlannedDateEnd   string `json:"planned_date_end"`
 }
 
 type ProductDto struct {

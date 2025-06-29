@@ -12,7 +12,6 @@ type ViewDelivery struct {
 }
 
 type CreateDelivery struct {
-	UserId           uuid.UUID `json:"user_id"`
 	OrderId          uuid.UUID `json:"order_id"`
 	PlannedDateStart string    `json:"planned_date_start"`
 	PlannedDateEnd   string    `json:"planned_date_end"`

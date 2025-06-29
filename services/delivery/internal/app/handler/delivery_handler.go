@@ -133,10 +133,6 @@ func (cu *DeliveryHandler) create(w http.ResponseWriter, r *http.Request, userID
 		return
 	}
 
-	// Определяем начало и конец интервала
-	testWrongStart := time.Date(plannedDateStart.Year(), plannedDateStart.Month(), plannedDateStart.Day(), 0, 0, 0, 0, plannedDateStart.Location())
-	testWrongEnd := time.Date(plannedDateEnd.Year(), plannedDateEnd.Month(), plannedDateEnd.Day(), 6, 0, 0, 0, plannedDateEnd.Location())
-
 	if plannedDateStart == plannedDateEnd {
 		server.ErrorResponseOutput(r.Context(), w, nil, "даты не могут быть равны")
 
@@ -145,12 +141,6 @@ func (cu *DeliveryHandler) create(w http.ResponseWriter, r *http.Request, userID
 
 	if plannedDateStart.After(plannedDateEnd) {
 		server.ErrorResponseOutput(r.Context(), w, nil, "дата тачала должна быть меньше")
-
-		return
-	}
-
-	if plannedDateStart.After(testWrongStart) && plannedDateEnd.Before(testWrongEnd) {
-		server.ErrorResponseOutput(r.Context(), w, nil, "на это время доставка не доступна")
 
 		return
 	}

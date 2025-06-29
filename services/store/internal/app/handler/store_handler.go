@@ -112,7 +112,8 @@ func (cu *StoreHandler) create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if storeDto.Price <= 0 {
-		server.ErrorResponseOutput(r.Context(), w, err, "не верная цена остатка")
+		err = errors.New("не верная цена остатка")
+		server.ErrorResponseOutput(r.Context(), w, err, err.Error())
 
 		return
 	}
@@ -145,13 +146,13 @@ func (cu *StoreHandler) create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = cu.config.GetDb().Transaction(func(tx *gorm.DB) error {
-		result := cu.config.GetDb().Create(store)
+		result := tx.Create(store)
 		if result.Error != nil {
 			return result.Error
 		}
 
 		var errReserve error
-		reserve, errReserve = cu.repository.Reserve(int(storeDto.Quantity), store.ID, nil, userID)
+		reserve, errReserve = cu.repository.Reserve(tx, int(storeDto.Quantity), store.ID, nil, userID)
 		if errReserve != nil {
 			return errReserve
 		}

@@ -18,6 +18,7 @@ import (
 	"github.com/kvvvseins/mictoservices/services/order/internal/app/repository"
 	"github.com/kvvvseins/server"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 )
 
 // OrderHandler хендлер создания order.
@@ -155,12 +156,29 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 		Guid:   orderGuid,
 	}
 
-	result := cu.config.GetDb().Create(order)
-	if result.Error != nil {
+	err = cu.config.GetDb().Transaction(func(tx *gorm.DB) error {
+		result := tx.Create(order)
+		if result.Error != nil {
+			server.GetLogger(r.Context()).Error(result.Error.Error())
+
+			return errors.New("ошибка сохранения заказа")
+		}
+
+		errReserveDelivery := cu.reserveDelivery(r.Context(), orderDto.Delivery, userID, orderGuid)
+		if errReserveDelivery != nil {
+			server.GetLogger(r.Context()).Error(errReserveDelivery.Error())
+
+			return errors.New("ошибка бронирования доставки")
+		}
+
+		return nil
+	})
+
+	if err != nil {
 		go cu.backReserveProducts(r.Context(), orderDto.Products, userID, orderGuid)
 		go cu.backWriteOffMoney(r.Context(), price, userID)
 
-		server.ErrorResponseOutput(r.Context(), w, result.Error, "ошибка создания заказа пользователя")
+		server.ErrorResponseOutput(r.Context(), w, err, err.Error())
 
 		return
 	}
@@ -392,6 +410,44 @@ func (cu *OrderHandler) reserveProducts(
 
 	if response.StatusCode != http.StatusCreated {
 		return errors.New("не удалось зарезервировать")
+	}
+
+	return nil
+}
+
+func (cu *OrderHandler) reserveDelivery(
+	ctx context.Context,
+	delivery dto.DeliveryDto,
+	userID uuid.UUID,
+	orderGuid uuid.UUID,
+) error {
+	reader := strings.NewReader(`
+{
+    "order_id": "` + orderGuid.String() + `",
+    "planned_date_start": "` + delivery.PlannedDateStart + `",
+    "planned_date_end": "` + delivery.PlannedDateEnd + `"
+}`)
+
+	deliverySchema := cu.config.App.MicroservicesRoutes.Delivery.Schema
+	deliveryRoute := cu.config.App.MicroservicesRoutes.Delivery.Route
+	deliveryPort := cu.config.App.MicroservicesRoutes.Delivery.Port
+	request, err := http.NewRequest(http.MethodPost, deliverySchema+"://"+deliveryRoute+":"+deliveryPort+"/", reader)
+	if err != nil {
+		return errors.Wrap(err, "не удалось создать request для резервирования доставки")
+	}
+
+	server.SetUserIDToHeader(request.Header, userID)
+	server.AddRequestIDToRequestHeader(request.Header, server.GetRequestID(ctx))
+
+	var response *http.Response
+
+	response, err = cu.httpClient.Do(request)
+	if err != nil {
+		return errors.Wrap(err, "не удалось сделать запрос на резервирование доставки")
+	}
+
+	if response.StatusCode != http.StatusCreated {
+		return errors.New("не удалось зарезервировать доставку")
 	}
 
 	return nil

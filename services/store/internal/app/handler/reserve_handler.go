@@ -96,7 +96,7 @@ func (cu *ReserveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				return errors.Wrap(err, "недостаточно товара на складе")
 			}
 
-			_, err = cu.repository.Reserve(reserveDtoQuantity, store.ID, &reserveDto.OrderId, userID)
+			_, err = cu.repository.Reserve(tx, reserveDtoQuantity, store.ID, &reserveDto.OrderId, userID)
 			if err != nil {
 				return errors.Wrap(err, "ошибка резервирования")
 			}
@@ -104,6 +104,11 @@ func (cu *ReserveHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		return nil
 	})
+	if err != nil {
+		server.ErrorResponseOutput(r.Context(), w, err, "не удалось зарезервировать")
+
+		return
+	}
 
 	w.WriteHeader(http.StatusCreated)
 }

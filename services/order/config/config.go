@@ -40,6 +40,11 @@ type Config struct {
 				Route  string `envconfig:"MICROSERVICES_STORE_ROUTE" default:"store-service"`
 				Port   string `envconfig:"MICROSERVICES_STORE_PORT" default:"8000"`
 			}
+			Delivery struct {
+				Schema string `envconfig:"MICROSERVICES_DELIVERY_SCHEMA" default:"http"`
+				Route  string `envconfig:"MICROSERVICES_DELIVERY_ROUTE" default:"delivery-service"`
+				Port   string `envconfig:"MICROSERVICES_DELIVERY_PORT" default:"8000"`
+			}
 		}
 	}
 	Env  string `default:"dev" envconfig:"ENV"`
