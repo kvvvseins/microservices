@@ -18,10 +18,10 @@ install: add-namespace setDefaultNamespace install-monitoring install-ingress in
 check-ingress-nginx-pod:
 	kubectl get pods --namespace ingress-nginx
 
-install-services: install-auth install-pinger install-billing install-order install-notify
+install-services: install-auth install-pinger install-billing install-order install-notify install-store install-delivery
 check-readiness-db-services:
 	kubectl get pods --namespace $(MICROSERVICES_NAMESPACE) | grep postgres
-install-services-migration: install-auth-migration install-pinger-migration install-billing-migration install-order-migration install-notify-migration
+install-services-migration: install-auth-migration install-pinger-migration install-billing-migration install-order-migration install-notify-migration install-store-migration install-delivery-migration
 ###### INSTALL CLUSTER ######
 
 ###### INSTALL KAFKA (не настроена, только варианты) ######
@@ -177,4 +177,16 @@ install-pinger:
 	$(MAKE) -C services/$(PINGER_SERVICE_NAME) install
 install-pinger-migration:
 	$(MAKE) -C services/$(PINGER_SERVICE_NAME) migration
+
+STORE_SERVICE_NAME := store
+install-store:
+	$(MAKE) -C services/$(STORE_SERVICE_NAME) install
+install-store-migration:
+	$(MAKE) -C services/$(STORE_SERVICE_NAME) migration
+
+DELIVERY_SERVICE_NAME := delivery
+install-delivery:
+	$(MAKE) -C services/$(DELIVERY_SERVICE_NAME) install
+install-delivery-migration:
+	$(MAKE) -C services/$(DELIVERY_SERVICE_NAME) migration
 ### SERVICES ###
