@@ -61,4 +61,14 @@ spec:
               name: store-service
               port:
                 number: 8000
+  - host: arch.homework
+    http:
+      paths:
+        - path: /delivery(/|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: delivery-service
+              port:
+                number: 8000
 

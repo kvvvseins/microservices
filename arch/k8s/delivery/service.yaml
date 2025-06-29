@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: delivery-service
+  namespace: microservices
+  labels:
+    k8s-app: kube-state-metrics
+spec:
+  selector:
+    app: delivery
+  ports:
+    - protocol: TCP
+      port: 8000
+      name: delivery-web
+      targetPort: del-web-dep
+  type: ClusterIP
