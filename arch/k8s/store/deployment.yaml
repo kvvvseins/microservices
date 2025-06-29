@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: store-deployment
+    labels:
+      app: store
+    namespace: microservices
+spec:
+    replicas: 3
+    selector:
+       matchLabels:
+          app: store
+    template:
+       metadata:
+          labels:
+             app: store
+       spec:
+          containers:
+          - name: store
+            image: vladimirkostin/store:latest
+            command: ["/opt/store/store-app"]
+            env:
+              - name: PORT
+                value: '8000'
+              - name: DB_TYPE
+                valueFrom:
+                  configMapKeyRef:
+                    name: store-config
+                    key: db_type
+              - name: CONNECTION_DSN
+                valueFrom:
+                  secretKeyRef:
+                    name: store-secret
+                    key: connection_dsn
+            ports:
+              - name: store-web-dep
+                containerPort: 8000

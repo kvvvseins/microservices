@@ -43,7 +43,7 @@ func main() {
 	})
 	router, httpServer := server.NewServer(cnf.HTTP.Port, cnf.App.LogLevel)
 	router.Use(std.HandlerProvider("/health/", metricMiddleware))
-	router.Use(std.HandlerProvider("/user/{:id}/", metricMiddleware))
+	router.Use(std.HandlerProvider("/profile/", metricMiddleware))
 
 	profileRepository := repository.NewProfileRepository(cnf.GetDb())
 

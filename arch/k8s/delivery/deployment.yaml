@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: delivery-deployment
+    labels:
+      app: delivery
+    namespace: microservices
+spec:
+    replicas: 3
+    selector:
+       matchLabels:
+          app: delivery
+    template:
+       metadata:
+          labels:
+             app: delivery
+       spec:
+          containers:
+          - name: delivery
+            image: vladimirkostin/delivery:latest
+            command: ["/opt/delivery/delivery-app"]
+            env:
+              - name: PORT
+                value: '8000'
+              - name: DB_TYPE
+                valueFrom:
+                  configMapKeyRef:
+                    name: delivery-config
+                    key: db_type
+              - name: CONNECTION_DSN
+                valueFrom:
+                  secretKeyRef:
+                    name: delivery-secret
+                    key: connection_dsn
+            ports:
+              - name: del-web-dep
+                containerPort: 8000

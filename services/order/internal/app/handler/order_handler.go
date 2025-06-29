@@ -3,8 +3,10 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"io"
 	"math/rand/v2"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -16,6 +18,7 @@ import (
 	"github.com/kvvvseins/mictoservices/services/order/internal/app/repository"
 	"github.com/kvvvseins/server"
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 )
 
 // OrderHandler хендлер создания order.
@@ -106,9 +109,17 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 		return
 	}
 
-	var price int
-	for _, productDto := range orderDto.Products {
-		price += productDto.Price
+	if len(orderDto.Products) == 0 {
+		server.ErrorResponseOutput(r.Context(), w, nil, "не указаны товары")
+
+		return
+	}
+
+	price, err := cu.calculateOrderPrice(r.Context(), orderDto.Products, userID)
+	if err != nil {
+		server.ErrorResponseOutput(r.Context(), w, err, "ошибка расчета цены заказа")
+
+		return
 	}
 
 	if price <= 0 {
@@ -117,20 +128,57 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 		return
 	}
 
-	if err = cu.writeOffMoney(r.Context(), userID, price); err != nil {
+	if err = cu.writeOffMoney(r.Context(), userID, int(price), false); err != nil {
 		server.ErrorResponseOutput(r.Context(), w, err, "ошибка списания средств, возможно недостаточно денег на счете")
+
+		return
+	}
+
+	orderGuid := uuid.New()
+
+	reserveProducts := slices.Clone(orderDto.Products)
+	for i := range reserveProducts {
+		reserveProducts[i].Quantity = reserveProducts[i].Quantity * -1
+	}
+
+	err = cu.reserveProducts(r.Context(), reserveProducts, userID, orderGuid)
+	if err != nil {
+		go cu.backWriteOffMoney(r.Context(), price, userID)
+
+		server.ErrorResponseOutput(r.Context(), w, err, "недостаточно товара")
 
 		return
 	}
 
 	order := &model.Order{
 		UserID: userID,
-		Price:  uint(price),
+		Price:  price,
+		Guid:   orderGuid,
 	}
 
-	result := cu.config.GetDb().Create(order)
-	if result.Error != nil {
-		server.ErrorResponseOutput(r.Context(), w, result.Error, "ошибка создания заказа пользователя")
+	err = cu.config.GetDb().Transaction(func(tx *gorm.DB) error {
+		result := tx.Create(order)
+		if result.Error != nil {
+			server.GetLogger(r.Context()).Error(result.Error.Error())
+
+			return errors.New("ошибка сохранения заказа")
+		}
+
+		errReserveDelivery := cu.reserveDelivery(r.Context(), orderDto.Delivery, userID, orderGuid)
+		if errReserveDelivery != nil {
+			server.GetLogger(r.Context()).Error(errReserveDelivery.Error())
+
+			return errors.New("ошибка бронирования доставки")
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		go cu.backReserveProducts(r.Context(), orderDto.Products, userID, orderGuid)
+		go cu.backWriteOffMoney(r.Context(), price, userID)
+
+		server.ErrorResponseOutput(r.Context(), w, err, err.Error())
 
 		return
 	}
@@ -138,6 +186,24 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 	go cu.notifyCreateOrder(r.Context(), order, orderDto.Email, userID)
 
 	cu.responseOrder(order, w, r, http.StatusCreated)
+}
+
+func (cu *OrderHandler) backWriteOffMoney(ctx context.Context, price uint, userID uuid.UUID) {
+	go func() {
+		err := cu.writeOffMoney(ctx, userID, int(price), true)
+		if err != nil {
+			//@todo сделать retry или через кафку
+		}
+	}()
+}
+
+func (cu *OrderHandler) backReserveProducts(ctx context.Context, products []dto.ProductDto, userID, orderGuid uuid.UUID) {
+	go func() {
+		err := cu.reserveProducts(ctx, products, userID, orderGuid)
+		if err != nil {
+			//@todo сделать retry или через кафку
+		}
+	}()
 }
 
 func (cu *OrderHandler) responseOrder(order *model.Order, w http.ResponseWriter, r *http.Request, status int) {
@@ -158,9 +224,15 @@ func randRange(min, max int) int {
 	return rand.IntN(max-min) + min
 }
 
-func (cu *OrderHandler) writeOffMoney(ctx context.Context, userID uuid.UUID, price int) error {
+func (cu *OrderHandler) writeOffMoney(ctx context.Context, userID uuid.UUID, price int, isBack bool) error {
 	priceStr := strconv.Itoa(price)
-	reader := strings.NewReader(`{"value": -` + priceStr + `}`)
+
+	since := "-"
+	if isBack {
+		since = ""
+	}
+
+	reader := strings.NewReader(`{"value": ` + since + priceStr + `}`)
 	billingSchema := cu.config.App.MicroservicesRoutes.Billing.Schema
 	billingRoute := cu.config.App.MicroservicesRoutes.Billing.Route
 	billingPort := cu.config.App.MicroservicesRoutes.Billing.Port
@@ -226,4 +298,157 @@ func (cu *OrderHandler) notifyCreateOrder(
 	if response.StatusCode != http.StatusCreated {
 		server.GetLogger(ctx).Warn("не удалось отправить уведомление")
 	}
+}
+
+func (cu *OrderHandler) calculateOrderPrice(
+	ctx context.Context,
+	products []dto.ProductDto,
+	userID uuid.UUID,
+) (uint, error) {
+	queryGuids := "?"
+	for _, product := range products {
+		queryGuids += "guid=" + product.Guid.String() + "&"
+	}
+
+	//@todo отдельный мс цен
+	storeSchema := cu.config.App.MicroservicesRoutes.Store.Schema
+	storeRoute := cu.config.App.MicroservicesRoutes.Store.Route
+	storePort := cu.config.App.MicroservicesRoutes.Store.Port
+	request, err := http.NewRequest(http.MethodGet, storeSchema+"://"+storeRoute+":"+storePort+"/"+queryGuids, nil)
+	if err != nil {
+		return 0, errors.Wrap(err, "не удалось создать request для получения цен")
+	}
+
+	server.SetUserIDToHeader(request.Header, userID)
+	server.AddRequestIDToRequestHeader(request.Header, server.GetRequestID(ctx))
+
+	var response *http.Response
+
+	response, err = cu.httpClient.Do(request)
+	if err != nil {
+		return 0, errors.Wrap(err, "не удалось сделать запрос на получения цен")
+	}
+
+	if response.StatusCode != http.StatusOK {
+		return 0, errors.New("не удалось получить цены")
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return 0, errors.Wrap(err, "Ошибка при чтении тела ответа получения цен")
+	}
+
+	var priceDtos []dto.Price
+	err = json.Unmarshal(body, &priceDtos)
+	if err != nil {
+		return 0, errors.Wrap(err, "Ошибка парсинга цен")
+	}
+
+	var prices uint
+
+	for _, price := range priceDtos {
+		quantity, errQ := findQuantity(products, price.Guid)
+		if errQ != nil {
+			return 0, errQ
+		}
+
+		prices = prices + (price.Price * quantity)
+	}
+
+	return prices, nil
+}
+
+func findQuantity(products []dto.ProductDto, guid uuid.UUID) (uint, error) {
+	for _, product := range products {
+		if product.Guid == guid {
+			if product.Quantity <= 0 {
+				return 0, errors.New("количество товара не может быть <= 0")
+			}
+
+			return uint(product.Quantity), nil
+		}
+	}
+
+	return 0, errors.New("ошибка поиска Quantity")
+}
+
+func (cu *OrderHandler) reserveProducts(
+	ctx context.Context,
+	products []dto.ProductDto,
+	userID uuid.UUID,
+	orderGuid uuid.UUID,
+) error {
+	jsonBody, err := json.Marshal(products)
+	if err != nil {
+		return errors.Wrap(err, "не удалось получить json")
+	}
+
+	reader := strings.NewReader(`
+{
+    "order_id": "` + orderGuid.String() + `",
+    "products": ` + string(jsonBody) + `
+}`)
+
+	//@todo отдельный мс цен
+	storeSchema := cu.config.App.MicroservicesRoutes.Store.Schema
+	storeRoute := cu.config.App.MicroservicesRoutes.Store.Route
+	storePort := cu.config.App.MicroservicesRoutes.Store.Port
+	request, err := http.NewRequest(http.MethodPost, storeSchema+"://"+storeRoute+":"+storePort+"/reserve", reader)
+	if err != nil {
+		return errors.Wrap(err, "не удалось создать request для резервирования")
+	}
+
+	server.SetUserIDToHeader(request.Header, userID)
+	server.AddRequestIDToRequestHeader(request.Header, server.GetRequestID(ctx))
+
+	var response *http.Response
+
+	response, err = cu.httpClient.Do(request)
+	if err != nil {
+		return errors.Wrap(err, "не удалось сделать запрос на резервирование")
+	}
+
+	if response.StatusCode != http.StatusCreated {
+		return errors.New("не удалось зарезервировать")
+	}
+
+	return nil
+}
+
+func (cu *OrderHandler) reserveDelivery(
+	ctx context.Context,
+	delivery dto.DeliveryDto,
+	userID uuid.UUID,
+	orderGuid uuid.UUID,
+) error {
+	reader := strings.NewReader(`
+{
+    "order_id": "` + orderGuid.String() + `",
+    "planned_date_start": "` + delivery.PlannedDateStart + `",
+    "planned_date_end": "` + delivery.PlannedDateEnd + `"
+}`)
+
+	deliverySchema := cu.config.App.MicroservicesRoutes.Delivery.Schema
+	deliveryRoute := cu.config.App.MicroservicesRoutes.Delivery.Route
+	deliveryPort := cu.config.App.MicroservicesRoutes.Delivery.Port
+	request, err := http.NewRequest(http.MethodPost, deliverySchema+"://"+deliveryRoute+":"+deliveryPort+"/", reader)
+	if err != nil {
+		return errors.Wrap(err, "не удалось создать request для резервирования доставки")
+	}
+
+	server.SetUserIDToHeader(request.Header, userID)
+	server.AddRequestIDToRequestHeader(request.Header, server.GetRequestID(ctx))
+
+	var response *http.Response
+
+	response, err = cu.httpClient.Do(request)
+	if err != nil {
+		return errors.Wrap(err, "не удалось сделать запрос на резервирование доставки")
+	}
+
+	if response.StatusCode != http.StatusCreated {
+		return errors.New("не удалось зарезервировать доставку")
+	}
+
+	return nil
 }

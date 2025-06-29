@@ -35,6 +35,16 @@ type Config struct {
 				Route  string `envconfig:"MICROSERVICES_NOTIFY_ROUTE" default:"notify-service"`
 				Port   string `envconfig:"MICROSERVICES_NOTIFY_PORT" default:"8000"`
 			}
+			Store struct {
+				Schema string `envconfig:"MICROSERVICES_STORE_SCHEMA" default:"http"`
+				Route  string `envconfig:"MICROSERVICES_STORE_ROUTE" default:"store-service"`
+				Port   string `envconfig:"MICROSERVICES_STORE_PORT" default:"8000"`
+			}
+			Delivery struct {
+				Schema string `envconfig:"MICROSERVICES_DELIVERY_SCHEMA" default:"http"`
+				Route  string `envconfig:"MICROSERVICES_DELIVERY_ROUTE" default:"delivery-service"`
+				Port   string `envconfig:"MICROSERVICES_DELIVERY_PORT" default:"8000"`
+			}
 		}
 	}
 	Env  string `default:"dev" envconfig:"ENV"`

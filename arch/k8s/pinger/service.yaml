@@ -14,7 +14,7 @@ spec:
       name: pinger-web
       targetPort: pinger-web-dep
     - protocol: TCP
-      port: 9090
+      port: 9070
       name: http-metrics
       targetPort: metrics
   type: ClusterIP

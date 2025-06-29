@@ -13,6 +13,8 @@ node "Kubernetes cluster" {
     package "Auth depended on MS" {
         [Personal Cabinet (Pinger) MS]
         [Order MS] -> [Payment MS] : списание
+        [Order MS] -> [Store MS] : Получить цены и резерв
+        [Order MS] -> [Delivery MS] : Доставка
         [Payment MS] -> [Order MS]
         [Personal Cabinet (Pinger) MS] --> [Payment MS] : Получить Баланс
     }

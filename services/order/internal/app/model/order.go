@@ -12,6 +12,7 @@ type Order struct {
 	Guid      uuid.UUID `gorm:"type:uuid;<-:create"`
 	UserID    uuid.UUID `gorm:"type:uuid;column:user_id"`
 	Price     uint
+	Status    uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -20,6 +21,10 @@ type Order struct {
 func (u *Order) BeforeCreate(_ *gorm.DB) (err error) {
 	if u.Guid == uuid.Nil {
 		u.Guid = uuid.New()
+	}
+
+	if u.Status == 0 {
+		u.Status = 2
 	}
 
 	return

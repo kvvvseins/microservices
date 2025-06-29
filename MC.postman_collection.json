@@ -225,7 +225,7 @@
 					"response": []
 				},
 				{
-					"name": "Get data",
+					"name": "get profile",
 					"event": [
 						{
 							"listen": "test",
@@ -245,7 +245,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzQ5NjUzMzY4LCJpYXQiOjE3NDk1NjY5NjgsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIyNDZhMmFlNi0xMDEzLTQ1MjEtOTAwYy0wNTUxYmU0ZDE4MTUifQ.96YjbgicEEGab1royUcg03hvzY-_sNCfouOlGJ3oo58",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMjA1MTY2LCJpYXQiOjE3NTExMTg3NjYsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.qYcEd5zQBBO5cwBpSQdErE5b7OJ8O7akz8sKwedlyN8",
 								"type": "text"
 							}
 						],
@@ -264,7 +264,7 @@
 					"response": []
 				},
 				{
-					"name": "Post data",
+					"name": "create profile",
 					"event": [
 						{
 							"listen": "test",
@@ -313,7 +313,7 @@
 					"response": []
 				},
 				{
-					"name": "Update data",
+					"name": "Update profile",
 					"event": [
 						{
 							"listen": "test",
@@ -362,7 +362,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete data (не реалезовано)",
+					"name": "Delete profile (не реалезовано)",
 					"event": [
 						{
 							"listen": "test",
@@ -498,7 +498,7 @@
 					"response": []
 				},
 				{
-					"name": "Get data",
+					"name": "Get get account",
 					"event": [
 						{
 							"listen": "test",
@@ -518,7 +518,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTkxNjE3LCJpYXQiOjE3NTAxMDUyMTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.r1id8K3xsaLz1yyGIi51QJmBOWVqgnMNryAH_1ks5vc",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMjc4MDM0LCJpYXQiOjE3NTExOTE2MzQsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.fsDjlbXU4LEf_kZ507tQR0O267eK0jM17SC-YkZtk-U",
 								"type": "text"
 							}
 						],
@@ -536,7 +536,7 @@
 					"response": []
 				},
 				{
-					"name": "Post data",
+					"name": "create account",
 					"event": [
 						{
 							"listen": "test",
@@ -575,7 +575,7 @@
 					"response": []
 				},
 				{
-					"name": "Update data",
+					"name": "Update money",
 					"event": [
 						{
 							"listen": "test",
@@ -596,13 +596,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTkxNjE3LCJpYXQiOjE3NTAxMDUyMTcsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.r1id8K3xsaLz1yyGIi51QJmBOWVqgnMNryAH_1ks5vc",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMjA1MTY2LCJpYXQiOjE3NTExMTg3NjYsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.qYcEd5zQBBO5cwBpSQdErE5b7OJ8O7akz8sKwedlyN8",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"value\": 55,\n    \"email\": \"ccc@mail.ru\"\n}",
+							"raw": "{\n\t\"value\": 5555,\n    \"email\": \"ccc@mail.ru\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -667,7 +667,7 @@
 					"response": []
 				},
 				{
-					"name": "Get data",
+					"name": "Get orders",
 					"event": [
 						{
 							"listen": "test",
@@ -705,7 +705,339 @@
 					"response": []
 				},
 				{
-					"name": "Post data",
+					"name": "create order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMjA1MTY2LCJpYXQiOjE3NTExMTg3NjYsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.qYcEd5zQBBO5cwBpSQdErE5b7OJ8O7akz8sKwedlyN8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"aaaa@mail.ru\",\n    \"products\": [\n        {\n            \"guid\": \"e72bf007-8094-4099-be3e-38cad5c0219f\",\n            \"quantity\": 3\n        },\n        {\n            \"guid\": \"9dd81f96-a196-4043-9390-8ae882a41b88\",\n            \"quantity\": 4\n        }\n    ],\n    \"delivery\": {\n        \"planned_date_start\": \"2025-06-28 00:08:23+03:00\",\n        \"planned_date_end\": \"2025-06-28 07:08:23+03:00\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{order_url}}/",
+							"host": [
+								"{{order_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "delivery",
+			"item": [
+				{
+					"name": "health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMjc4MDM0LCJpYXQiOjE3NTExOTE2MzQsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.fsDjlbXU4LEf_kZ507tQR0O267eK0jM17SC-YkZtk-U",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{delivery_url}}/health/",
+							"host": [
+								"{{delivery_url}}"
+							],
+							"path": [
+								"health",
+								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Get deliveries",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMjc4MDM0LCJpYXQiOjE3NTExOTE2MzQsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.fsDjlbXU4LEf_kZ507tQR0O267eK0jM17SC-YkZtk-U",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{delivery_url}}/",
+							"host": [
+								"{{delivery_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "create delivery",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMjA1MTY2LCJpYXQiOjE3NTExMTg3NjYsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.qYcEd5zQBBO5cwBpSQdErE5b7OJ8O7akz8sKwedlyN8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"db021db8-50ea-41fd-b85b-22d141082362\",\n    \"order_id\": \"e2f2e0bc-1303-4dc9-abb0-bde2c0b4e38d\",\n    \"planned_date_start\": \"2025-06-28 00:08:23+03:00\",\n    \"planned_date_end\": \"2025-06-28 07:08:23+03:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{delivery_url}}/",
+							"host": [
+								"{{delivery_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "store",
+			"item": [
+				{
+					"name": "health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMjc4MDM0LCJpYXQiOjE3NTExOTE2MzQsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.fsDjlbXU4LEf_kZ507tQR0O267eK0jM17SC-YkZtk-U",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{store_url}}/health/",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"health",
+								""
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "get products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMTk4OTg1LCJpYXQiOjE3NTExMTI1ODUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.513-ZVw9udGFj_0jbzm3NN_VyTIX07Xa80ZwrgiRKbU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{store_url}}/?guid=e72bf007-8094-4099-be3e-38cad5c0219f&guid=9dd81f96-a196-4043-9390-8ae882a41b88&",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								""
+							],
+							"query": [
+								{
+									"key": "guid",
+									"value": "e72bf007-8094-4099-be3e-38cad5c0219f"
+								},
+								{
+									"key": "guid",
+									"value": "9dd81f96-a196-4043-9390-8ae882a41b88"
+								},
+								{
+									"key": "",
+									"value": null
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "list products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMjc4MDM0LCJpYXQiOjE3NTExOTE2MzQsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.fsDjlbXU4LEf_kZ507tQR0O267eK0jM17SC-YkZtk-U",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{store_url}}/list",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"list"
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "create product",
 					"event": [
 						{
 							"listen": "test",
@@ -726,13 +1058,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUwMTc1NTM1LCJpYXQiOjE3NTAwODkxMzUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiIwNzI3M2I4ZC00OGZmLTQ3MDQtOWNiYy0zNTA5YTFjNzI1ZTMifQ.GGAoAvlvSMocin63wp4aKbsb__m1g9JCx6CxCdXdTCA",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMTk4OTg1LCJpYXQiOjE3NTExMTI1ODUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.513-ZVw9udGFj_0jbzm3NN_VyTIX07Xa80ZwrgiRKbU",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"aaaa@mail.ru\",\n    \"products\": [\n        {\n            \"guid\": \"dsd\",\n            \"price\": 1\n        },\n        {\n            \"guid\": \"dsd\",\n            \"price\": 2\n        }\n    ]\n}",
+							"raw": "{\n    \"price\": 9,\n    \"name\": \"сумка1\",\n    \"quantity\": 111\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -740,12 +1072,60 @@
 							}
 						},
 						"url": {
-							"raw": "{{order_url}}/",
+							"raw": "{{store_url}}/",
 							"host": [
-								"{{order_url}}"
+								"{{store_url}}"
 							],
 							"path": [
 								""
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "reserve",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhcmNoLmhvbWV3b3JrIiwiZXhwIjoxNzUxMTk4OTg1LCJpYXQiOjE3NTExMTI1ODUsImlzcyI6Im1pY3Jvc2VydmljZXMtc2VydmljZXMiLCJzdWIiOiJkYjAyMWRiOC01MGVhLTQxZmQtYjg1Yi0yMmQxNDEwODIzNjIifQ.513-ZVw9udGFj_0jbzm3NN_VyTIX07Xa80ZwrgiRKbU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": \"5648af7d-6a21-4fe1-ba7e-75408e8547ed\",\n    \"products\": [\n        {\n            \"guid\": \"e72bf007-8094-4099-be3e-38cad5c0219f\",\n            \"quantity\": 3\n        },\n        {\n            \"guid\": \"9dd81f96-a196-4043-9390-8ae882a41b88\",\n            \"quantity\": 4\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{store_url}}/reserve",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"reserve"
 							]
 						},
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -797,7 +1177,7 @@
 					"response": []
 				},
 				{
-					"name": "Get data",
+					"name": "Get notifications",
 					"event": [
 						{
 							"listen": "test",
@@ -835,7 +1215,7 @@
 					"response": []
 				},
 				{
-					"name": "Post data",
+					"name": "create notification",
 					"event": [
 						{
 							"listen": "test",
@@ -888,9 +1268,20 @@
 			"name": "local",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "X-Request-Id",
+						"value": "05e9392b-c614-4ee0-a53b-65b3b855ded1",
+						"type": "text"
+					},
+					{
+						"key": "X-User-Id",
+						"value": "05e9392b-c614-4ee0-a53b-65b3b855ded1",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "127.0.0.1:8000/health/",
+					"raw": "127.0.0.1:8000/?guid=df1d0c9c-cf28-4c48-8639-90474be3489b&guid=ac3e6a6b-fcbc-4a4e-bec3-3cdf21acb2a9&",
 					"host": [
 						"127",
 						"0",
@@ -899,8 +1290,21 @@
 					],
 					"port": "8000",
 					"path": [
-						"health",
 						""
+					],
+					"query": [
+						{
+							"key": "guid",
+							"value": "df1d0c9c-cf28-4c48-8639-90474be3489b"
+						},
+						{
+							"key": "guid",
+							"value": "ac3e6a6b-fcbc-4a4e-bec3-3cdf21acb2a9"
+						},
+						{
+							"key": "",
+							"value": null
+						}
 					]
 				}
 			},
@@ -908,15 +1312,23 @@
 		},
 		{
 			"name": "local Copy",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
-				"header": [],
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Request-Id",
+						"value": "05e9392b-c614-4ee0-a53b-65b3b855ded1",
+						"type": "text"
+					},
+					{
+						"key": "X-User-Id",
+						"value": "05e9392b-c614-4ee0-a53b-65b3b855ded1",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"sdds3\",\n    \"password\": \"sd\"\n}",
+					"raw": "{\n    \"user_id\": \"db021db8-50ea-41fd-b85b-22d141082362\",\n    \"order_id\": \"e2f2e0bc-1303-4dc9-abb0-bde2c0b4e38d\",\n    \"planned_date_start\": \"2025-06-28 00:08:23+03:00\",\n    \"planned_date_end\": \"2025-06-28 04:08:23+03:00\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -924,17 +1336,57 @@
 					}
 				},
 				"url": {
-					"raw": "127.0.0.1:44313/registration/",
+					"raw": "127.0.0.1:8000/",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "44313",
+					"port": "8000",
 					"path": [
-						"registration",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "local Copy 2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Request-Id",
+						"value": "05e9392b-c614-4ee0-a53b-65b3b855ded1",
+						"type": "text"
+					},
+					{
+						"key": "X-User-Id",
+						"value": "05e9392b-c614-4ee0-a53b-65b3b855ded1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"guid\": \"df1d0c9c-cf28-4c48-8639-90474be3489b\",\n        \"quantity\": -1\n    },\n    {\n        \"guid\": \"c4298f17-b057-48cb-8245-55554f03de57\",\n        \"quantity\": -2\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8000/reserve",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"reserve"
 					]
 				}
 			},
@@ -948,20 +1400,27 @@
 					{
 						"key": "X-User-Id",
 						"value": "sddsd",
-						"type": "text"
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "X-Request-Id",
+						"value": "d57576fc-344f-4b96-83e6-a421369942b0",
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"url": {
-					"raw": "127.0.0.1:8000/profile/",
+					"raw": "127.0.0.1:9070/metrics/",
 					"host": [
 						"127",
 						"0",
 						"0",
 						"1"
 					],
-					"port": "8000",
+					"port": "9070",
 					"path": [
-						"profile",
+						"metrics",
 						""
 					]
 				}

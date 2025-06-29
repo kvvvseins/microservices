@@ -1,0 +1,1 @@
+ALTER TABLE orders ADD status smallint DEFAULT 2 NOT NULL;

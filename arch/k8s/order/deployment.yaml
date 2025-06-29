@@ -35,5 +35,3 @@ spec:
             ports:
               - name: order-web-dep
                 containerPort: 8000
-              - name: metrics
-                containerPort: 9070
