@@ -128,7 +128,7 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 		return
 	}
 
-	if err = cu.writeOffMoney(r.Context(), userID, int(price), false); err != nil {
+	if err = cu.writeOffMoney(r.Context(), userID, int(price), orderDto.Email, false); err != nil {
 		server.ErrorResponseOutput(r.Context(), w, err, "ошибка списания средств, возможно недостаточно денег на счете")
 
 		return
@@ -143,7 +143,7 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 
 	err = cu.reserveProducts(r.Context(), reserveProducts, userID, orderGuid)
 	if err != nil {
-		go cu.backWriteOffMoney(r.Context(), price, userID)
+		go cu.backWriteOffMoney(r.Context(), price, userID, orderDto.Email)
 
 		server.ErrorResponseOutput(r.Context(), w, err, "недостаточно товара")
 
@@ -176,7 +176,7 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 
 	if err != nil {
 		go cu.backReserveProducts(r.Context(), orderDto.Products, userID, orderGuid)
-		go cu.backWriteOffMoney(r.Context(), price, userID)
+		go cu.backWriteOffMoney(r.Context(), price, userID, orderDto.Email)
 
 		server.ErrorResponseOutput(r.Context(), w, err, err.Error())
 
@@ -188,9 +188,9 @@ func (cu *OrderHandler) create(w http.ResponseWriter, r *http.Request, userID uu
 	cu.responseOrder(order, w, r, http.StatusCreated)
 }
 
-func (cu *OrderHandler) backWriteOffMoney(ctx context.Context, price uint, userID uuid.UUID) {
+func (cu *OrderHandler) backWriteOffMoney(ctx context.Context, price uint, userID uuid.UUID, email string) {
 	go func() {
-		err := cu.writeOffMoney(ctx, userID, int(price), true)
+		err := cu.writeOffMoney(ctx, userID, int(price), email, true)
 		if err != nil {
 			//@todo сделать retry или через кафку
 		}
@@ -224,7 +224,7 @@ func randRange(min, max int) int {
 	return rand.IntN(max-min) + min
 }
 
-func (cu *OrderHandler) writeOffMoney(ctx context.Context, userID uuid.UUID, price int, isBack bool) error {
+func (cu *OrderHandler) writeOffMoney(ctx context.Context, userID uuid.UUID, price int, email string, isBack bool) error {
 	priceStr := strconv.Itoa(price)
 
 	since := "-"
@@ -232,7 +232,7 @@ func (cu *OrderHandler) writeOffMoney(ctx context.Context, userID uuid.UUID, pri
 		since = ""
 	}
 
-	reader := strings.NewReader(`{"value": ` + since + priceStr + `}`)
+	reader := strings.NewReader(`{"value": ` + since + priceStr + `, "email": "` + email + `"}`)
 	billingSchema := cu.config.App.MicroservicesRoutes.Billing.Schema
 	billingRoute := cu.config.App.MicroservicesRoutes.Billing.Route
 	billingPort := cu.config.App.MicroservicesRoutes.Billing.Port
